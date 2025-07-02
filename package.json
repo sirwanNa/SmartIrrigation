@@ -1,0 +1,27 @@
+{
+  "name": "smartirrigation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+"scripts": {
+  "start": "ts-node src/index.ts",
+  "build": "tsc",
+  "start:prod": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sirwanNa/SmartIrrigation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sirwanNa/SmartIrrigation/issues"
+  },
+  "homepage": "https://github.com/sirwanNa/SmartIrrigation#readme",
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
