@@ -20,13 +20,4 @@ var SensorType;
     SensorType["WaterFlow"] = "WaterFlow";
     SensorType["WaterLevel"] = "WaterLevel";
     SensorType["Pressure"] = "Pressure";
-    // ⚡ Power & Signal
-    SensorType["BatteryLevel"] = "BatteryLevel";
-    SensorType["SignalStrength"] = "SignalStrength";
-    // 📦 Miscellaneous
-    SensorType["CO2"] = "CO2";
-    SensorType["Ammonia"] = "Ammonia";
-    SensorType["Methane"] = "Methane";
-    SensorType["Motion"] = "Motion";
-    SensorType["Custom"] = "Custom";
 })(SensorType || (exports.SensorType = SensorType = {}));

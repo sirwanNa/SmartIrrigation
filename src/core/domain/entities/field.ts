@@ -9,4 +9,5 @@ export interface Field {
   latitude: number;
   longitude: number;
   FarmId?: number;
+  CultivationDate:Date;
 }
