@@ -8,8 +8,7 @@ class GetFarmCommand {
     execute() {
         if (this.Id === undefined)
             throw new Error('Id is undefined');
-        var obj = this._farmRepository.getFarm(this.Id);
-        return obj;
+        return this._farmRepository.getFarm(this.Id);
     }
 }
 exports.GetFarmCommand = GetFarmCommand;

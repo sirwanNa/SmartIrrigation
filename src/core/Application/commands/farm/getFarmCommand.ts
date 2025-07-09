@@ -1,6 +1,6 @@
 
 // import {ICommand,ICommandHandler} from '../ICommand'
-import {ICommand} from '../ICommand'
+import {ICommand} from '../iCommand'
 import {IFarmRepository} from '../../interface/repositories/iFarmRepository'
 import {FarmDTO} from '../../dTOs/FarmDTO'
 
