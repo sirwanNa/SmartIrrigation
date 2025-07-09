@@ -12,8 +12,7 @@ import {FarmDTO} from '../../dTOs/FarmDTO'
     }
     public execute(): FarmDTO {
         if(this.Id === undefined) throw new Error('Id is undefined');
-        var obj:FarmDTO = this._farmRepository.getFarm(this.Id);
-        return obj;       
+        return this._farmRepository.getFarm(this.Id);             
     }
  }
 
