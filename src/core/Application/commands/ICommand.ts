@@ -1,7 +1,7 @@
 
 
 export interface ICommand<TResult =void>{
-     execute():TResult;
+     executeAsync():TResult;
 }
 
 // export interface ICommandHandler<TCommand extends ICommand<TResult>, TResult> {

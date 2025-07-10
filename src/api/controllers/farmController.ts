@@ -1,17 +1,92 @@
+import { Request, Response } from 'express';
+import { GetFarmCommand } from '../../core/Application/commands/farm/getFarmCommand';
+import { GetFarmsListCommand } from '../../core/Application/commands/farm/getFarmsListCommand';
+import { CreateFarmCommand } from '../../core/Application/commands/farm/createFarmCommand';
+import { UpdateFarmCommand } from '../../core/Application/commands/farm/updateFarmCommand';
+import { DeleteFarmCommand } from '../../core/Application/commands/farm/deleteFarmCommand';
+import { IFarmRepository } from '../../core/Application/interface/repositories/iFarmRepository';
+import { List } from '../../share/utilities/list';
+import { FarmDTO } from '../../core/Application/dTOs/FarmDTO';
 
-import {GetFarmCommand} from '../../core/Application/commands/farm/getFarmCommand'
-import {IFarmRepository} from '../../core/Application/interface/repositories/iFarmRepository'
-import {FarmDTO} from '../../core/Application/dTOs/FarmDTO'
+export class FarmController {
+  constructor(private readonly _farmRepository: IFarmRepository) {}
 
-export class FarmController{
-     private _farmRepository:IFarmRepository;
-     constructor(farmRepository:IFarmRepository){
-        this._farmRepository = farmRepository;
-     }
-    getFarm =(req:any, res:any):FarmDTO=>{
-       var command:GetFarmCommand = new GetFarmCommand(this._farmRepository);
-       let result:FarmDTO=command.execute();
-       return result;
-    }   
+  public getFarmAsync = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const farmId:number = parseInt(req.params.id, 10);
+      if (isNaN(farmId)) {
+        res.status(400).json({ message: 'Invalid farm ID' });
+        return;
+      }
 
+      const command = new GetFarmCommand(this._farmRepository);
+      command.FarmId = farmId;
+      const result: FarmDTO = await command.executeAsync();
+
+      if (!result) {
+        res.status(404).json({ message: 'Farm not found' });
+        return;
+      }
+
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error in getFarm:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+
+  public getFarmsListAsync = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const command = new GetFarmsListCommand(this._farmRepository);
+      const result: List<FarmDTO> = await command.executeAsync();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error in getFarmsList:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+
+  public createFarmAsync = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const farmData: FarmDTO = req.body;
+      const command = new CreateFarmCommand(this._farmRepository);
+      command.farmData = farmData;
+      const createdFarm: boolean = await command.executeAsync();
+      res.status(201).json(createdFarm);
+    } catch (error) {
+      console.error('Error in creating farm:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+
+  public updateFarmAsync = async (req: Request, res: Response): Promise<void> => {
+    try {
+
+      const farmData: FarmDTO = req.body;     
+      const command = new UpdateFarmCommand(this._farmRepository);
+      command.farmData = farmData;
+      const updatedFarm: boolean = await command.executeAsync();
+      res.status(200).json(updatedFarm);
+    } catch (error) {
+      console.error('Error in updateFarm:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+
+  public deleteFarmAsync = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const farmId:number = parseInt(req.params.id, 10);
+      if (isNaN(farmId)) {
+        res.status(400).json({ message: 'Invalid farm ID' });
+        return;
+      }
+      const command = new DeleteFarmCommand(this._farmRepository);
+      command.FarmId = farmId;
+      const deleted:boolean = await command.executeAsync();
+      res.status(204).json(deleted);
+    } catch (error) {
+      console.error('Error in deleteFarm:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
 }

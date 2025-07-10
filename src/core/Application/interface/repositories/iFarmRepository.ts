@@ -3,9 +3,9 @@ import {FarmDTO} from '../../dTOs/FarmDTO'
 import {List} from '../../../../share/utilities/list'
 
 export interface IFarmRepository{
-    getFarm(id:number):FarmDTO;  
-    getFarmsList():List<FarmDTO>;
-    create(farm:FarmDTO):boolean;  
-    update(farm:FarmDTO):boolean;
-    remove(id:number):boolean;  
+    getFarmAsync(id:number):Promise<FarmDTO>;  
+    getFarmsListAsync():Promise<List<FarmDTO>>;
+    createAsync(farm:FarmDTO):Promise<boolean>;  
+    updateAsync(farm:FarmDTO):Promise<boolean>;
+    removeAsync(id:number):Promise<boolean>;  
 }

@@ -1,11 +1,11 @@
-import {IFarmRepository} from '../../core/Application/interface/repositories/iFarmRepository'
-import {FarmDTO} from '../../core/Application/dTOs/FarmDTO'
-import {List} from '../../share/utilities/list'
+import { IFarmRepository } from '../../core/Application/interface/repositories/iFarmRepository';
+import { FarmDTO } from '../../core/Application/dTOs/FarmDTO';
+import { List } from '../../share/utilities/list';
 
 export class FarmRepository implements IFarmRepository {
   private farms: FarmDTO[] = [];
 
-  getFarm(id: number): FarmDTO {
+  public async getFarmAsync(id: number): Promise<FarmDTO> {
     const farm = this.farms.find(f => f.farmId === id);
     if (!farm) {
       throw new Error(`Farm with ID ${id} not found`);
@@ -13,11 +13,12 @@ export class FarmRepository implements IFarmRepository {
     return farm;
   }
 
-  getFarmsList(): List<FarmDTO> {
-    return new List<FarmDTO>();
+  public async getFarmsListAsync(): Promise<List<FarmDTO>> {
+    const list = new List<FarmDTO>();    
+    return list;
   }
 
-  create(farm: FarmDTO): boolean {
+  public async createAsync(farm: FarmDTO): Promise<boolean> {
     const exists = this.farms.some(f => f.farmId === farm.farmId);
     if (exists) return false;
 
@@ -25,7 +26,7 @@ export class FarmRepository implements IFarmRepository {
     return true;
   }
 
-  update(farm: FarmDTO): boolean {
+  public async updateAsync(farm: FarmDTO): Promise<boolean> {
     const index = this.farms.findIndex(f => f.farmId === farm.farmId);
     if (index === -1) return false;
 
@@ -33,7 +34,7 @@ export class FarmRepository implements IFarmRepository {
     return true;
   }
 
-  remove(id: number): boolean {
+  public async removeAsync(id: number): Promise<boolean> {
     const index = this.farms.findIndex(f => f.farmId === id);
     if (index === -1) return false;
 
