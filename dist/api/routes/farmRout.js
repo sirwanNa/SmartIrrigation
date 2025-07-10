@@ -17,5 +17,5 @@ router.get('/farm/:id', controller.getFarmAsync);
 router.get('/farm/getfarmsList/', controller.getFarmsListAsync);
 router.post('/farm/create/', controller.createFarmAsync);
 router.put('/farm/update/', controller.updateFarmAsync);
-router.delete('/farm/delete', controller.deleteFarmAsync);
+router.delete('/farm/delete/', controller.deleteFarmAsync);
 exports.default = router;

@@ -10,7 +10,7 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // Routes
 app.get('/', (req, res) => {
-    res.send('🚀 Smart Irrigation API is running...');
+    res.send('Smart Irrigation API is running...');
 });
 app.use('/api/v1', farmRout_1.default);
 exports.default = app;
