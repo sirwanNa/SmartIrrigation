@@ -1,8 +1,9 @@
 
 import {CroptType} from '../../domain/enums/cropType'
 import {SoilType} from '../../domain/enums/soilType'
-export interface FieldDTO {
-  fieldId: number;
+import {BaseModel} from './baseModel'
+
+export interface FieldDTO extends BaseModel {
   name: string;
   cropType: CroptType;
   soilType: SoilType;

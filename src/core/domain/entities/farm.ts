@@ -1,7 +1,7 @@
 import {FarmType} from '../enums/farmType'
 import {IrrigationType} from '../enums/irrigationType'
-export interface Farm {
-  farmId: number;
+import {BaseEntity} from './baseEntity'
+export interface Farm extends BaseEntity {  
   name: string;
   farmType:FarmType;
   irrigationType: IrrigationType;

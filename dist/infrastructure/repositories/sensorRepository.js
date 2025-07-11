@@ -7,7 +7,7 @@ class SensorRepository {
         this.Sensors = [];
     }
     async getSensorAsync(id) {
-        const Sensor = this.Sensors.find(f => f.sensorId === id);
+        const Sensor = this.Sensors.find(f => f.id === id);
         if (!Sensor) {
             throw new Error(`Sensor with ID ${id} not found`);
         }
@@ -18,21 +18,21 @@ class SensorRepository {
         return list;
     }
     async createAsync(Sensor) {
-        const exists = this.Sensors.some(f => f.sensorId === Sensor.sensorId);
+        const exists = this.Sensors.some(f => f.id === Sensor.id);
         if (exists)
             return false;
         this.Sensors.push(Sensor);
         return true;
     }
     async updateAsync(Sensor) {
-        const index = this.Sensors.findIndex(f => f.sensorId === Sensor.sensorId);
+        const index = this.Sensors.findIndex(f => f.id === Sensor.id);
         if (index === -1)
             return false;
         this.Sensors[index] = Sensor;
         return true;
     }
     async removeAsync(id) {
-        const index = this.Sensors.findIndex(f => f.sensorId === id);
+        const index = this.Sensors.findIndex(f => f.id === id);
         if (index === -1)
             return false;
         this.Sensors.splice(index, 1);

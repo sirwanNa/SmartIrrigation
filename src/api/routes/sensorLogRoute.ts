@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { SensorLogController } from '../controllers/sensorLogController';
-import {ISensorLogRepository} from '../../core/Application/interface/repositories/iSensorLogRepository'
+import {ISensorLogRepository} from '../../core/application/interface/repositories/iSensorLogRepository'
 import {SensorLogRepository} from '../../infrastructure/repositories/sensorLogRepository'
 
 const router = Router();

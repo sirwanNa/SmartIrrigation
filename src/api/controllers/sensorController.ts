@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { GetSensorCommand } from '../../core/Application/commands/sensor/getSensorCommand';
-import { GetSensorsListCommand } from '../../core/Application/commands/sensor/getSensorsListCommand';
-import { CreateSensorCommand } from '../../core/Application/commands/sensor/createSensorCommand';
-import { UpdateSensorCommand } from '../../core/Application/commands/sensor/updateSensorCommand';
-import { DeleteSensorCommand } from '../../core/Application/commands/sensor/deleteSensorCommand';
-import { ISensorRepository } from '../../core/Application/interface/repositories/iSensorRepository';
+import { GetSensorCommand } from '../../core/application/commands/sensor/getSensorCommand';
+import { GetSensorsListCommand } from '../../core/application/commands/sensor/getSensorsListCommand';
+import { CreateSensorCommand } from '../../core/application/commands/sensor/createSensorCommand';
+import { UpdateSensorCommand } from '../../core/application/commands/sensor/updateSensorCommand';
+import { DeleteSensorCommand } from '../../core/application/commands/sensor/deleteSensorCommand';
+import { ISensorRepository } from '../../core/application/interface/repositories/iSensorRepository';
 import { List } from '../../share/utilities/list';
-import { SensorDTO } from '../../core/Application/dTOs/sensorDTO';
+import { SensorDTO } from '../../core/application/dTOs/sensorDTO';
 
 export class SensorController {
   constructor(private readonly _SensorRepository: ISensorRepository) {}

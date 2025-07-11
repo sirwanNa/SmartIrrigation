@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SensorController = void 0;
-const getSensorCommand_1 = require("../../core/Application/commands/sensor/getSensorCommand");
-const getSensorsListCommand_1 = require("../../core/Application/commands/sensor/getSensorsListCommand");
-const createSensorCommand_1 = require("../../core/Application/commands/sensor/createSensorCommand");
-const updateSensorCommand_1 = require("../../core/Application/commands/sensor/updateSensorCommand");
-const deleteSensorCommand_1 = require("../../core/Application/commands/sensor/deleteSensorCommand");
+const getSensorCommand_1 = require("../../core/application/commands/sensor/getSensorCommand");
+const getSensorsListCommand_1 = require("../../core/application/commands/sensor/getSensorsListCommand");
+const createSensorCommand_1 = require("../../core/application/commands/sensor/createSensorCommand");
+const updateSensorCommand_1 = require("../../core/application/commands/sensor/updateSensorCommand");
+const deleteSensorCommand_1 = require("../../core/application/commands/sensor/deleteSensorCommand");
 class SensorController {
     constructor(_SensorRepository) {
         this._SensorRepository = _SensorRepository;

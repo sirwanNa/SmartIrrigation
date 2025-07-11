@@ -1,7 +1,7 @@
 import {SensorType} from '../enums/sensorType'
 import {SensorStatus} from '../enums/sensorStatus'
-export interface Sensor {
-  sensorId: number;
+import {BaseEntity} from './baseEntity'
+export interface Sensor extends BaseEntity { 
   name: string;
   sensorType: SensorType;
   fieldId: number;

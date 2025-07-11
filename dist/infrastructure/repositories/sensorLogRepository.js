@@ -7,20 +7,17 @@ class SensorLogRepository {
         this.SensorLogs = [];
     }
     async getSensorLogAsync(id) {
-        const SensorLog = this.SensorLogs.find(f => f.sensorLogId === id);
+        const SensorLog = this.SensorLogs.find(f => f.id === id);
         if (!SensorLog) {
             throw new Error(`SensorLog with ID ${id} not found`);
         }
         return SensorLog;
     }
-    async getSensorLogsListAsync() {
+    async getSensorLogsListAsync(sensorId) {
         const list = new list_1.List();
         return list;
     }
     async createAsync(SensorLog) {
-        const exists = this.SensorLogs.some(f => f.sensorLogId === SensorLog.sensorLogId);
-        if (exists)
-            return false;
         this.SensorLogs.push(SensorLog);
         return true;
     }

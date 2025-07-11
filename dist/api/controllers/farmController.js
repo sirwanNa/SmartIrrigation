@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FarmController = void 0;
-const getFarmCommand_1 = require("../../core/Application/commands/farm/getFarmCommand");
-const getFarmsListCommand_1 = require("../../core/Application/commands/farm/getFarmsListCommand");
-const createFarmCommand_1 = require("../../core/Application/commands/farm/createFarmCommand");
-const updateFarmCommand_1 = require("../../core/Application/commands/farm/updateFarmCommand");
-const deleteFarmCommand_1 = require("../../core/Application/commands/farm/deleteFarmCommand");
+const getFarmCommand_1 = require("../../core/application/commands/farm/getFarmCommand");
+const getFarmsListCommand_1 = require("../../core/application/commands/farm/getFarmsListCommand");
+const createFarmCommand_1 = require("../../core/application/commands/farm/createFarmCommand");
+const updateFarmCommand_1 = require("../../core/application/commands/farm/updateFarmCommand");
+const deleteFarmCommand_1 = require("../../core/application/commands/farm/deleteFarmCommand");
 class FarmController {
     constructor(_farmRepository) {
         this._farmRepository = _farmRepository;

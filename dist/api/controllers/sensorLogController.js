@@ -1,21 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SensorLogController = void 0;
-const getSensorLogCommand_1 = require("../../core/Application/commands/sensorLog/getSensorLogCommand");
-const getSensorLogsListCommand_1 = require("../../core/Application/commands/sensorLog/getSensorLogsListCommand");
-const createSensorLogCommand_1 = require("../../core/Application/commands/sensorLog/createSensorLogCommand");
+const getSensorLogCommand_1 = require("../../core/application/commands/sensorLog/getSensorLogCommand");
+const getSensorLogsListCommand_1 = require("../../core/application/commands/sensorLog/getSensorLogsListCommand");
+const createSensorLogCommand_1 = require("../../core/application/commands/sensorLog/createSensorLogCommand");
 class SensorLogController {
     constructor(_SensorLogRepository) {
         this._SensorLogRepository = _SensorLogRepository;
         this.getSensorLogAsync = async (req, res) => {
             try {
-                const SensorLogId = parseInt(req.params.id, 10);
-                if (isNaN(SensorLogId)) {
+                const sensorLogId = parseInt(req.params.id, 10);
+                if (isNaN(sensorLogId)) {
                     res.status(400).json({ message: 'Invalid SensorLog ID' });
                     return;
                 }
                 const command = new getSensorLogCommand_1.GetSensorLogCommand(this._SensorLogRepository);
-                command.sensorLogId = SensorLogId;
+                command.sensorLogId = sensorLogId;
                 const result = await command.executeAsync();
                 if (!result) {
                     res.status(404).json({ message: 'SensorLog not found' });
@@ -30,7 +30,8 @@ class SensorLogController {
         };
         this.getSensorLogsListAsync = async (req, res) => {
             try {
-                const command = new getSensorLogsListCommand_1.GetSensorLogsListCommand(this._SensorLogRepository);
+                const sensorId = parseInt(req.params.id, 10);
+                const command = new getSensorLogsListCommand_1.GetSensorLogsListCommand(this._SensorLogRepository, sensorId);
                 const result = await command.executeAsync();
                 res.status(200).json(result);
             }

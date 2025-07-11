@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { GetFarmCommand } from '../../core/Application/commands/farm/getFarmCommand';
-import { GetFarmsListCommand } from '../../core/Application/commands/farm/getFarmsListCommand';
-import { CreateFarmCommand } from '../../core/Application/commands/farm/createFarmCommand';
-import { UpdateFarmCommand } from '../../core/Application/commands/farm/updateFarmCommand';
-import { DeleteFarmCommand } from '../../core/Application/commands/farm/deleteFarmCommand';
-import { IFarmRepository } from '../../core/Application/interface/repositories/iFarmRepository';
+import { GetFarmCommand } from '../../core/application/commands/farm/getFarmCommand';
+import { GetFarmsListCommand } from '../../core/application/commands/farm/getFarmsListCommand';
+import { CreateFarmCommand } from '../../core/application/commands/farm/createFarmCommand';
+import { UpdateFarmCommand } from '../../core/application/commands/farm/updateFarmCommand';
+import { DeleteFarmCommand } from '../../core/application/commands/farm/deleteFarmCommand';
+import { IFarmRepository } from '../../core/application/interface/repositories/iFarmRepository';
 import { List } from '../../share/utilities/list';
-import { FarmDTO } from '../../core/Application/dTOs/farmDTO';
+import { FarmDTO } from '../../core/application/dTOs/farmDTO';
 
 export class FarmController {
   constructor(private readonly _farmRepository: IFarmRepository) {}

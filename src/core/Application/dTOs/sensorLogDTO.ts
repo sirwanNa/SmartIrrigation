@@ -1,9 +1,7 @@
-export interface SensorLogDTO {
-  sensorLogId:number;
-  readingId: number;
+import {BaseModel} from './baseModel'
+export interface SensorLogDTO extends BaseModel {
   sensorId: number;
   value: number;
-  timestamp: Date;
   batteryLevel?: number;
   signalStrength?: number;
 }

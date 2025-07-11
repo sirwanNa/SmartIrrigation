@@ -2,11 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetFieldsListCommand = void 0;
 class GetFieldsListCommand {
-    constructor(fieldRepository) {
-        this._fieldRepository = fieldRepository;
+    constructor(fieldRepository, farmId) {
+        this.fieldRepository = fieldRepository;
+        this.farmId = farmId;
     }
-    executeAsync() {
-        return this._fieldRepository.getFieldsListAsync();
+    async executeAsync() {
+        return this.fieldRepository.getFieldsListAsync(this.farmId);
     }
 }
 exports.GetFieldsListCommand = GetFieldsListCommand;

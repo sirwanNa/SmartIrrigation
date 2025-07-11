@@ -1,23 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FieldController = void 0;
-const getFieldCommand_1 = require("../../core/Application/commands/field/getFieldCommand");
-const getFieldsListCommand_1 = require("../../core/Application/commands/field/getFieldsListCommand");
-const createFieldCommand_1 = require("../../core/Application/commands/field/createFieldCommand");
-const updateFieldCommand_1 = require("../../core/Application/commands/field/updateFieldCommand");
-const deleteFieldCommand_1 = require("../../core/Application/commands/field/deleteFieldCommand");
+const getFieldCommand_1 = require("../../core/application/commands/field/getFieldCommand");
+const getFieldsListCommand_1 = require("../../core/application/commands/field/getFieldsListCommand");
+const createFieldCommand_1 = require("../../core/application/commands/field/createFieldCommand");
+const updateFieldCommand_1 = require("../../core/application/commands/field/updateFieldCommand");
+const deleteFieldCommand_1 = require("../../core/application/commands/field/deleteFieldCommand");
 class FieldController {
-    constructor(_FieldRepository) {
-        this._FieldRepository = _FieldRepository;
+    constructor(_fieldRepository) {
+        this._fieldRepository = _fieldRepository;
         this.getFieldAsync = async (req, res) => {
             try {
-                const FieldId = parseInt(req.params.id, 10);
-                if (isNaN(FieldId)) {
+                const fieldId = parseInt(req.params.id, 10);
+                if (isNaN(fieldId)) {
                     res.status(400).json({ message: 'Invalid Field ID' });
                     return;
                 }
-                const command = new getFieldCommand_1.GetFieldCommand(this._FieldRepository);
-                command.fieldId = FieldId;
+                const command = new getFieldCommand_1.GetFieldCommand(this._fieldRepository);
+                command.fieldId = fieldId;
                 const result = await command.executeAsync();
                 if (!result) {
                     res.status(404).json({ message: 'Field not found' });
@@ -32,7 +32,8 @@ class FieldController {
         };
         this.getFieldsListAsync = async (req, res) => {
             try {
-                const command = new getFieldsListCommand_1.GetFieldsListCommand(this._FieldRepository);
+                const farmId = parseInt(req.params.id, 10);
+                const command = new getFieldsListCommand_1.GetFieldsListCommand(this._fieldRepository, farmId);
                 const result = await command.executeAsync();
                 res.status(200).json(result);
             }
@@ -44,7 +45,7 @@ class FieldController {
         this.createFieldAsync = async (req, res) => {
             try {
                 const FieldData = req.body;
-                const command = new createFieldCommand_1.CreateFieldCommand(this._FieldRepository);
+                const command = new createFieldCommand_1.CreateFieldCommand(this._fieldRepository);
                 command.fieldData = FieldData;
                 const createdField = await command.executeAsync();
                 res.status(201).json(createdField);
@@ -57,7 +58,7 @@ class FieldController {
         this.updateFieldAsync = async (req, res) => {
             try {
                 const FieldData = req.body;
-                const command = new updateFieldCommand_1.UpdateFieldCommand(this._FieldRepository);
+                const command = new updateFieldCommand_1.UpdateFieldCommand(this._fieldRepository);
                 command.fieldData = FieldData;
                 const updatedField = await command.executeAsync();
                 res.status(200).json(updatedField);
@@ -74,7 +75,7 @@ class FieldController {
                     res.status(400).json({ message: 'Invalid Field ID' });
                     return;
                 }
-                const command = new deleteFieldCommand_1.DeleteFieldCommand(this._FieldRepository);
+                const command = new deleteFieldCommand_1.DeleteFieldCommand(this._fieldRepository);
                 command.fieldId = FieldId;
                 const deleted = await command.executeAsync();
                 res.status(204).json(deleted);

@@ -1,25 +1,25 @@
-import { IFieldRepository } from '../../core/Application/interface/repositories/iFieldRepository';
-import { FieldDTO } from '../../core/Application/dTOs/fieldDTO';
+import { IFieldRepository } from '../../core/application/interface/repositories/iFieldRepository';
+import { FieldDTO } from '../../core/application/dTOs/fieldDTO';
 import { List } from '../../share/utilities/list';
 
 export class FieldRepository implements IFieldRepository {
   private Fields: FieldDTO[] = [];
 
   public async getFieldAsync(id: number): Promise<FieldDTO> {
-    const Field = this.Fields.find(f => f.fieldId === id);
+    const Field = this.Fields.find(f => f.id === id);
     if (!Field) {
       throw new Error(`Field with ID ${id} not found`);
     }
     return Field;
   }
 
-  public async getFieldsListAsync(): Promise<List<FieldDTO>> {
+  public async getFieldsListAsync(farmdId:number): Promise<List<FieldDTO>> {
     const list = new List<FieldDTO>();    
     return list;
   }
 
   public async createAsync(Field: FieldDTO): Promise<boolean> {
-    const exists = this.Fields.some(f => f.fieldId === Field.fieldId);
+    const exists = this.Fields.some(f => f.id === Field.id);
     if (exists) return false;
 
     this.Fields.push(Field);
@@ -27,7 +27,7 @@ export class FieldRepository implements IFieldRepository {
   }
 
   public async updateAsync(Field: FieldDTO): Promise<boolean> {
-    const index = this.Fields.findIndex(f => f.fieldId === Field.fieldId);
+    const index = this.Fields.findIndex(f => f.id === Field.id);
     if (index === -1) return false;
 
     this.Fields[index] = Field;
@@ -35,7 +35,7 @@ export class FieldRepository implements IFieldRepository {
   }
 
   public async removeAsync(id: number): Promise<boolean> {
-    const index = this.Fields.findIndex(f => f.fieldId === id);
+    const index = this.Fields.findIndex(f => f.id === id);
     if (index === -1) return false;
 
     this.Fields.splice(index, 1);

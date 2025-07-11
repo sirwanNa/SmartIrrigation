@@ -1,26 +1,26 @@
 import { Request, Response } from 'express';
-import { GetFieldCommand } from '../../core/Application/commands/field/getFieldCommand';
-import { GetFieldsListCommand } from '../../core/Application/commands/field/getFieldsListCommand';
-import { CreateFieldCommand } from '../../core/Application/commands/field/createFieldCommand';
-import { UpdateFieldCommand } from '../../core/Application/commands/field/updateFieldCommand';
-import { DeleteFieldCommand } from '../../core/Application/commands/field/deleteFieldCommand';
-import { IFieldRepository } from '../../core/Application/interface/repositories/iFieldRepository';
+import { GetFieldCommand } from '../../core/application/commands/field/getFieldCommand';
+import { GetFieldsListCommand } from '../../core/application/commands/field/getFieldsListCommand';
+import { CreateFieldCommand } from '../../core/application/commands/field/createFieldCommand';
+import { UpdateFieldCommand } from '../../core/application/commands/field/updateFieldCommand';
+import { DeleteFieldCommand } from '../../core/application/commands/field/deleteFieldCommand';
+import { IFieldRepository } from '../../core/application/interface/repositories/iFieldRepository';
 import { List } from '../../share/utilities/list';
-import { FieldDTO } from '../../core/Application/dTOs/fieldDTO';
+import { FieldDTO } from '../../core/application/dTOs/fieldDTO';
 
 export class FieldController {
-  constructor(private readonly _FieldRepository: IFieldRepository) {}
+  constructor(private readonly _fieldRepository: IFieldRepository) {}
 
   public getFieldAsync = async (req: Request, res: Response): Promise<void> => {
     try {
-      const FieldId:number = parseInt(req.params.id, 10);
-      if (isNaN(FieldId)) {
+      const fieldId:number = parseInt(req.params.id, 10);
+      if (isNaN(fieldId)) {
         res.status(400).json({ message: 'Invalid Field ID' });
         return;
       }
 
-      const command = new GetFieldCommand(this._FieldRepository);
-      command.fieldId = FieldId;
+      const command = new GetFieldCommand(this._fieldRepository);
+      command.fieldId = fieldId;
       const result: FieldDTO = await command.executeAsync();
 
       if (!result) {
@@ -37,7 +37,8 @@ export class FieldController {
 
   public getFieldsListAsync = async (req: Request, res: Response): Promise<void> => {
     try {
-      const command = new GetFieldsListCommand(this._FieldRepository);
+      const farmId:number = parseInt(req.params.id, 10);
+      const command = new GetFieldsListCommand(this._fieldRepository,farmId);
       const result: List<FieldDTO> = await command.executeAsync();
       res.status(200).json(result);
     } catch (error) {
@@ -49,7 +50,7 @@ export class FieldController {
   public createFieldAsync = async (req: Request, res: Response): Promise<void> => {
     try {
       const FieldData: FieldDTO = req.body;
-      const command = new CreateFieldCommand(this._FieldRepository);
+      const command = new CreateFieldCommand(this._fieldRepository);
       command.fieldData = FieldData;
       const createdField: boolean = await command.executeAsync();
       res.status(201).json(createdField);
@@ -63,7 +64,7 @@ export class FieldController {
     try {
 
       const FieldData: FieldDTO = req.body;     
-      const command = new UpdateFieldCommand(this._FieldRepository);
+      const command = new UpdateFieldCommand(this._fieldRepository);
       command.fieldData = FieldData;
       const updatedField: boolean = await command.executeAsync();
       res.status(200).json(updatedField);
@@ -80,7 +81,7 @@ export class FieldController {
         res.status(400).json({ message: 'Invalid Field ID' });
         return;
       }
-      const command = new DeleteFieldCommand(this._FieldRepository);
+      const command = new DeleteFieldCommand(this._fieldRepository);
       command.fieldId = FieldId;
       const deleted:boolean = await command.executeAsync();
       res.status(204).json(deleted);

@@ -10,7 +10,7 @@
 
 import { Router } from 'express';
 import { FarmController } from '../controllers/farmController';
-import {IFarmRepository} from '../../core/Application/interface/repositories/iFarmRepository'
+import {IFarmRepository} from '../../core/application/interface/repositories/iFarmRepository'
 import {FarmRepository} from '../../infrastructure/repositories/farmRepository'
 
 const router = Router();

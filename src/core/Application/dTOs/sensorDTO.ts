@@ -1,7 +1,7 @@
 import {SensorType} from '../../domain/enums/sensorType'
 import {SensorStatus} from '../../domain/enums/sensorStatus'
-export interface SensorDTO {
-  sensorId: number;
+import {BaseModel} from './baseModel'
+export interface SensorDTO extends BaseModel { 
   name: string;
   sensorType: SensorType;
   fieldId: number;

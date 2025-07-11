@@ -1,24 +1,24 @@
 import { Request, Response } from 'express';
-import { GetSensorLogCommand } from '../../core/Application/commands/sensorLog/getSensorLogCommand';
-import { GetSensorLogsListCommand } from '../../core/Application/commands/sensorLog/getSensorLogsListCommand';
-import { CreateSensorLogCommand } from '../../core/Application/commands/sensorLog/createSensorLogCommand';
-import { ISensorLogRepository } from '../../core/Application/interface/repositories/iSensorLogRepository';
+import { GetSensorLogCommand } from '../../core/application/commands/sensorLog/getSensorLogCommand';
+import { GetSensorLogsListCommand } from '../../core/application/commands/sensorLog/getSensorLogsListCommand';
+import { CreateSensorLogCommand } from '../../core/application/commands/sensorLog/createSensorLogCommand';
+import { ISensorLogRepository } from '../../core/application/interface/repositories/iSensorLogRepository';
 import { List } from '../../share/utilities/list';
-import { SensorLogDTO } from '../../core/Application/dTOs/sensorLogDTO';
+import { SensorLogDTO } from '../../core/application/dTOs/sensorLogDTO';
 
 export class SensorLogController {
   constructor(private readonly _SensorLogRepository: ISensorLogRepository) {}
 
   public getSensorLogAsync = async (req: Request, res: Response): Promise<void> => {
     try {
-      const SensorLogId:number = parseInt(req.params.id, 10);
-      if (isNaN(SensorLogId)) {
+      const sensorLogId:number = parseInt(req.params.id, 10);
+      if (isNaN(sensorLogId)) {
         res.status(400).json({ message: 'Invalid SensorLog ID' });
         return;
       }
 
       const command = new GetSensorLogCommand(this._SensorLogRepository);
-      command.sensorLogId = SensorLogId;
+      command.sensorLogId = sensorLogId;
       const result: SensorLogDTO = await command.executeAsync();
 
       if (!result) {
@@ -35,7 +35,8 @@ export class SensorLogController {
 
   public getSensorLogsListAsync = async (req: Request, res: Response): Promise<void> => {
     try {
-      const command = new GetSensorLogsListCommand(this._SensorLogRepository);
+      const sensorId:number = parseInt(req.params.id, 10);
+      const command = new GetSensorLogsListCommand(this._SensorLogRepository,sensorId);
       const result: List<SensorLogDTO> = await command.executeAsync();
       res.status(200).json(result);
     } catch (error) {

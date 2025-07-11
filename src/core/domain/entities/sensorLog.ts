@@ -1,8 +1,7 @@
-export interface SensorLog {
-  readingId: number;
+import {BaseEntity} from './baseEntity'
+export interface SensorLog extends BaseEntity {
   sensorId: number;
-  value: number;
-  timestamp: Date;
+  value: number;  
   batteryLevel?: number;
   signalStrength?: number;
 }

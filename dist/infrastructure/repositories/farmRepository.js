@@ -7,7 +7,7 @@ class FarmRepository {
         this.farms = [];
     }
     async getFarmAsync(id) {
-        const farm = this.farms.find(f => f.farmId === id);
+        const farm = this.farms.find(f => f.id === id);
         if (!farm) {
             throw new Error(`Farm with ID ${id} not found`);
         }
@@ -18,21 +18,21 @@ class FarmRepository {
         return list;
     }
     async createAsync(farm) {
-        const exists = this.farms.some(f => f.farmId === farm.farmId);
+        const exists = this.farms.some(f => f.id === farm.id);
         if (exists)
             return false;
         this.farms.push(farm);
         return true;
     }
     async updateAsync(farm) {
-        const index = this.farms.findIndex(f => f.farmId === farm.farmId);
+        const index = this.farms.findIndex(f => f.id === farm.id);
         if (index === -1)
             return false;
         this.farms[index] = farm;
         return true;
     }
     async removeAsync(id) {
-        const index = this.farms.findIndex(f => f.farmId === id);
+        const index = this.farms.findIndex(f => f.id === id);
         if (index === -1)
             return false;
         this.farms.splice(index, 1);

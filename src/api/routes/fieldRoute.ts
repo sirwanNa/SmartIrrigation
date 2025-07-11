@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { FieldController } from '../controllers/fieldController';
-import {IFieldRepository} from '../../core/Application/interface/repositories/iFieldRepository'
+import {IFieldRepository} from '../../core/application/interface/repositories/iFieldRepository'
 import {FieldRepository} from '../../infrastructure/repositories/fieldRepository'
 
 const router = Router();
