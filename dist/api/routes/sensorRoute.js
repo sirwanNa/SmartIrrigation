@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const sensorController_1 = require("../controllers/sensorController");
+const sensorRepository_1 = require("../../infrastructure/repositories/sensorRepository");
+const router = (0, express_1.Router)();
+const sensorRepository = new sensorRepository_1.SensorRepository();
+const controller = new sensorController_1.SensorController(sensorRepository);
+router.get('/Sensor/:id', controller.getSensorAsync);
+router.get('/Sensor/getSensorsList/', controller.getSensorsListAsync);
+router.post('/Sensor/create/', controller.createSensorAsync);
+router.put('/Sensor/update/', controller.updateSensorAsync);
+router.delete('/Sensor/delete/', controller.deleteSensorAsync);
+exports.default = router;

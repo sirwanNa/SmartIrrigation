@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const fieldController_1 = require("../controllers/fieldController");
+const fieldRepository_1 = require("../../infrastructure/repositories/fieldRepository");
+const router = (0, express_1.Router)();
+const fieldRepository = new fieldRepository_1.FieldRepository();
+const controller = new fieldController_1.FieldController(fieldRepository);
+router.get('/Field/:id', controller.getFieldAsync);
+router.get('/Field/getFieldsList/', controller.getFieldsListAsync);
+router.post('/Field/create/', controller.createFieldAsync);
+router.put('/Field/update/', controller.updateFieldAsync);
+router.delete('/Field/delete/', controller.deleteFieldAsync);
+exports.default = router;

@@ -1,6 +1,6 @@
 import {ICommand} from '../iCommand'
 import {IFarmRepository} from '../../interface/repositories/iFarmRepository'
-import {FarmDTO} from '../../dTOs/FarmDTO'
+import {FarmDTO} from '../../dTOs/farmDTO'
 import {List} from '../../../../share/utilities/list'
 
  export class GetFarmsListCommand implements ICommand{

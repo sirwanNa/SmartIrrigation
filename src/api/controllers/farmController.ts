@@ -6,7 +6,7 @@ import { UpdateFarmCommand } from '../../core/Application/commands/farm/updateFa
 import { DeleteFarmCommand } from '../../core/Application/commands/farm/deleteFarmCommand';
 import { IFarmRepository } from '../../core/Application/interface/repositories/iFarmRepository';
 import { List } from '../../share/utilities/list';
-import { FarmDTO } from '../../core/Application/dTOs/FarmDTO';
+import { FarmDTO } from '../../core/Application/dTOs/farmDTO';
 
 export class FarmController {
   constructor(private readonly _farmRepository: IFarmRepository) {}

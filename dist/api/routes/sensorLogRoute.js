@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const sensorLogController_1 = require("../controllers/sensorLogController");
+const sensorLogRepository_1 = require("../../infrastructure/repositories/sensorLogRepository");
+const router = (0, express_1.Router)();
+const sensorLogRepository = new sensorLogRepository_1.SensorLogRepository();
+const controller = new sensorLogController_1.SensorLogController(sensorLogRepository);
+router.get('/SensorLog/:id', controller.getSensorLogAsync);
+router.get('/SensorLog/getSensorLogsList/', controller.getSensorLogsListAsync);
+router.post('/SensorLog/create/', controller.createSensorLogAsync);
+exports.default = router;

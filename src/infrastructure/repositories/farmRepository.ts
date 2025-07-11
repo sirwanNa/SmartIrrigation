@@ -1,5 +1,5 @@
 import { IFarmRepository } from '../../core/Application/interface/repositories/iFarmRepository';
-import { FarmDTO } from '../../core/Application/dTOs/FarmDTO';
+import { FarmDTO } from '../../core/Application/dTOs/farmDTO';
 import { List } from '../../share/utilities/list';
 
 export class FarmRepository implements IFarmRepository {

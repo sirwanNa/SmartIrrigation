@@ -5,8 +5,8 @@ import {FieldRepository} from '../../infrastructure/repositories/fieldRepository
 
 const router = Router();
 
-const FieldRepository: IFieldRepository = new FieldRepository();
-const controller = new FieldController(FieldRepository);
+const fieldRepository: IFieldRepository = new FieldRepository();
+const controller = new FieldController(fieldRepository);
 
 router.get('/Field/:id', controller.getFieldAsync);
 router.get('/Field/getFieldsList/',controller.getFieldsListAsync);

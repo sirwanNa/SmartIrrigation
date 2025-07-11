@@ -1,5 +1,5 @@
 
-import {FarmDTO} from '../../dTOs/FarmDTO'
+import {FarmDTO} from '../../dTOs/farmDTO'
 import {List} from '../../../../share/utilities/list'
 
 export interface IFarmRepository{
