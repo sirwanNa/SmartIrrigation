@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const plantGrowthController_1 = require("../controllers/plantGrowthController");
+const plantGrowthRepository_1 = require("../../infrastructure/repositories/plantGrowthRepository");
+const router = (0, express_1.Router)();
+const plantGrowthRepository = new plantGrowthRepository_1.PlantGrowthRepository();
+const controller = new plantGrowthController_1.PlantGrowthController(plantGrowthRepository);
+router.get('/plantGrowth/:id', controller.getPlantGrowthAsync);
+router.get('/plantGrowth/getPlantGrowthsList/', controller.getPlantGrowthsListAsync);
+router.post('/plantGrowth/create/', controller.createPlantGrowthAsync);
+router.put('/plantGrowth/update/', controller.updatePlantGrowthAsync);
+router.delete('/plantGrowth/delete/', controller.deletePlantGrowthAsync);
+exports.default = router;
