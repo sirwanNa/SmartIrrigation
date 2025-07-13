@@ -10,7 +10,7 @@ import pickle
 import io
 
 # Step 1: Load dataset from the API
-response = requests.get("http://localhost:4000/datasource/getdataset")
+response = requests.get("http://localhost:4000/api/v1/dataset/getdataset")
 data = response.json()
 
 # Convert to DataFrame
@@ -52,11 +52,11 @@ model_bytes.seek(0)
 
 # Step 8: POST the model to the API
 files = {'model': ('gradient_boosting_model.pkl', model_bytes, 'application/octet-stream')}
-response = requests.post("http://localhost:4000/ai/v1/updateModel", files=files)
+response = requests.post("http://localhost:4000/ai/v1/dataset/updateModel", files=files)
 
 # Step 9: Confirm result
 if response.status_code == 200:
     print("✅ Gradient Boosting model uploaded successfully.")
 else:
-    print(f"❌ Failed to upload model. Status code: {response.status_code}")
+    print(f"Failed to upload model. Status code: {response.status_code}")
     print(response.text)
