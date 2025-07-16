@@ -1,110 +1,51 @@
 import { IFarmRepository } from '../../core/application/interface/repositories/iFarmRepository';
 import { FarmDTO } from '../../core/application/dTOs/farmDTO';
 import { List } from '../../share/utilities/list';
+import { BaseRepository } from './baseRepository';
+import { Farm } from '../../core/domain/entities/farm';
+import { UnitOfWork } from '../data/unitofWork';
 
-import { MongoClient, ObjectId } from 'mongodb';
-const uri = 'mongodb://localhost:27017'; // replace with your MongoDB URI if needed
-const dbName = 'smartIrrigationDb';
-const collectionName = 'farms';
+export class FarmRepository extends BaseRepository<Farm> implements IFarmRepository {
+  constructor(uow: UnitOfWork) {
+    super(uow, 'farms');
+  }
 
+  private toDTO(entity: Farm): FarmDTO {
+    const { id, name, createdDate,farmType,irrigationType } = entity;
+    return { id, name, createdDate,farmType,irrigationType };
+  }
 
-export class FarmRepository implements IFarmRepository {
-  private farms: FarmDTO[] = [];
+  private fromDTO(dto: FarmDTO): Farm {
+    const { id, name, createdDate,farmType,irrigationType } = dto;
+    return { id, name,  createdDate,farmType,irrigationType };
+  }
 
   public async getFarmAsync(id: number): Promise<FarmDTO> {
-    const client = new MongoClient(uri);
-
-    try {
-      await client.connect();
-      const db = client.db(dbName);
-      const collection = db.collection<FarmDTO>(collectionName);
-
-      const farm = await collection.findOne({ id: id });
-
-      if (!farm) {
-        throw new Error(`Farm with ID ${id} not found`);
-      }
-      return farm;
-    } finally {
-      await client.close();
-    }
+    const entity = await this.getById(id);
+    if (!entity) throw new Error(`Farm with ID ${id} not found`);
+    return this.toDTO(entity);
   }
 
   public async getFarmsListAsync(): Promise<List<FarmDTO>> {
-    const client = new MongoClient(uri);
+    const entities = await this.getAll();
     const list = new List<FarmDTO>();
-
-    try {
-      await client.connect();
-      const db = client.db(dbName);
-      const collection = db.collection<FarmDTO>(collectionName);
-
-      const farms = await collection.find().toArray();
-
-      farms.forEach(farm => list.add(farm));
-
-      return list;
-    } finally {
-      await client.close();
-    }
+    entities.forEach(e => list.add(this.toDTO(e)));
+    return list;
   }
 
   public async createAsync(farm: FarmDTO): Promise<boolean> {
-    const client = new MongoClient(uri);
-
-    try {
-      await client.connect();
-      const db = client.db(dbName);
-      const collection = db.collection<FarmDTO>(collectionName);
-
-      // Check if farm with same id exists
-      const exists = await collection.findOne({ id: farm.id });
-      if (exists) return false;
-
-      // Insert new farm
-      const result = await collection.insertOne(farm);
-
-      return result.acknowledged;
-    } finally {
-      await client.close();
-    }
+    const existing = await this.getById(farm.id);
+    if (existing) return false;
+    const entity = this.fromDTO(farm);
+    return await this.create(entity);
   }
 
   public async updateAsync(farm: FarmDTO): Promise<boolean> {
-    if (!farm.id) return false; // id required to update
-
-    const client = new MongoClient(uri);
-
-    try {
-      await client.connect();
-      const db = client.db(dbName);
-      const collection = db.collection<FarmDTO>(collectionName);
-
-      // Update the farm document by matching 'id'
-      const result = await collection.updateOne(
-        { id: farm.id },
-        { $set: farm }
-      );
-
-      return result.modifiedCount > 0;
-    } finally {
-      await client.close();
-    }
+    const entity = this.fromDTO(farm);
+    return await this.update(entity);
   }
 
   public async removeAsync(id: number): Promise<boolean> {
-    const client = new MongoClient(uri);
-
-    try {
-      await client.connect();
-      const db = client.db(dbName);
-      const collection = db.collection(collectionName);
-
-      const result = await collection.deleteOne({ id: id });
-
-      return result.deletedCount > 0;
-    } finally {
-      await client.close();
-    }
+    return await this.delete(id);
   }
 }

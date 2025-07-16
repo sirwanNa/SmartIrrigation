@@ -2,91 +2,44 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FarmRepository = void 0;
 const list_1 = require("../../share/utilities/list");
-const mongodb_1 = require("mongodb");
-const uri = 'mongodb://localhost:27017'; // replace with your MongoDB URI if needed
-const dbName = 'smartIrrigationDb';
-const collectionName = 'farms';
-class FarmRepository {
-    constructor() {
-        this.farms = [];
+const baseRepository_1 = require("./baseRepository");
+class FarmRepository extends baseRepository_1.BaseRepository {
+    constructor(uow) {
+        super(uow, 'farms');
+    }
+    toDTO(entity) {
+        const { id, name, createdDate, farmType, irrigationType } = entity;
+        return { id, name, createdDate, farmType, irrigationType };
+    }
+    fromDTO(dto) {
+        const { id, name, createdDate, farmType, irrigationType } = dto;
+        return { id, name, createdDate, farmType, irrigationType };
     }
     async getFarmAsync(id) {
-        const client = new mongodb_1.MongoClient(uri);
-        try {
-            await client.connect();
-            const db = client.db(dbName);
-            const collection = db.collection(collectionName);
-            const farm = await collection.findOne({ id: id });
-            if (!farm) {
-                throw new Error(`Farm with ID ${id} not found`);
-            }
-            return farm;
-        }
-        finally {
-            await client.close();
-        }
+        const entity = await this.getById(id);
+        if (!entity)
+            throw new Error(`Farm with ID ${id} not found`);
+        return this.toDTO(entity);
     }
     async getFarmsListAsync() {
-        const client = new mongodb_1.MongoClient(uri);
+        const entities = await this.getAll();
         const list = new list_1.List();
-        try {
-            await client.connect();
-            const db = client.db(dbName);
-            const collection = db.collection(collectionName);
-            const farms = await collection.find().toArray();
-            farms.forEach(farm => list.add(farm));
-            return list;
-        }
-        finally {
-            await client.close();
-        }
+        entities.forEach(e => list.add(this.toDTO(e)));
+        return list;
     }
     async createAsync(farm) {
-        const client = new mongodb_1.MongoClient(uri);
-        try {
-            await client.connect();
-            const db = client.db(dbName);
-            const collection = db.collection(collectionName);
-            // Check if farm with same id exists
-            const exists = await collection.findOne({ id: farm.id });
-            if (exists)
-                return false;
-            // Insert new farm
-            const result = await collection.insertOne(farm);
-            return result.acknowledged;
-        }
-        finally {
-            await client.close();
-        }
+        const existing = await this.getById(farm.id);
+        if (existing)
+            return false;
+        const entity = this.fromDTO(farm);
+        return await this.create(entity);
     }
     async updateAsync(farm) {
-        if (!farm.id)
-            return false; // id required to update
-        const client = new mongodb_1.MongoClient(uri);
-        try {
-            await client.connect();
-            const db = client.db(dbName);
-            const collection = db.collection(collectionName);
-            // Update the farm document by matching 'id'
-            const result = await collection.updateOne({ id: farm.id }, { $set: farm });
-            return result.modifiedCount > 0;
-        }
-        finally {
-            await client.close();
-        }
+        const entity = this.fromDTO(farm);
+        return await this.update(entity);
     }
     async removeAsync(id) {
-        const client = new mongodb_1.MongoClient(uri);
-        try {
-            await client.connect();
-            const db = client.db(dbName);
-            const collection = db.collection(collectionName);
-            const result = await collection.deleteOne({ id: id });
-            return result.deletedCount > 0;
-        }
-        finally {
-            await client.close();
-        }
+        return await this.delete(id);
     }
 }
 exports.FarmRepository = FarmRepository;

@@ -12,10 +12,13 @@ import { Router } from 'express';
 import { FarmController } from '../controllers/farmController';
 import {IFarmRepository} from '../../core/application/interface/repositories/iFarmRepository'
 import {FarmRepository} from '../../infrastructure/repositories/farmRepository'
+import { MongoContext } from '../../infrastructure/data/mongoContext';
+import { UnitOfWork } from '../../infrastructure/data/unitofWork';
 
 const router = Router();
-
-const farmRepository: IFarmRepository = new FarmRepository();
+var mongoContext:MongoContext = new MongoContext("localhost:70125","smartIrrigation");
+var uow:UnitOfWork = new UnitOfWork(mongoContext);
+const farmRepository: IFarmRepository = new FarmRepository(uow);
 const controller = new FarmController(farmRepository);
 
 router.get('/farm/getfarm/:id', controller.getFarmAsync);
