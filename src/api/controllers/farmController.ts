@@ -48,6 +48,7 @@ export class FarmController {
 
   public createFarmAsync = async (req: Request, res: Response): Promise<void> => {
     try {
+      console.log("Come here");
       const farmData: FarmDTO = req.body;
       const command = new CreateFarmCommand(this._farmRepository);
       command.farmData = farmData;

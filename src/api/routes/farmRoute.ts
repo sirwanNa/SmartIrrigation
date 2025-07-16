@@ -18,7 +18,7 @@ const router = Router();
 const farmRepository: IFarmRepository = new FarmRepository();
 const controller = new FarmController(farmRepository);
 
-router.get('/farm/:id', controller.getFarmAsync);
+router.get('/farm/getfarm/:id', controller.getFarmAsync);
 router.get('/farm/getfarmsList/',controller.getFarmsListAsync);
 router.post('/farm/create/',controller.createFarmAsync);
 router.put('/farm/update/',controller.updateFarmAsync);

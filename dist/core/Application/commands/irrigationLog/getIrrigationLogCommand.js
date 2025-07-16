@@ -6,9 +6,9 @@ class GetIrrigationLogCommand {
         this._irrigationLogRepository = irrigationLogRepository;
     }
     executeAsync() {
-        if (this.irrigationLogId === undefined)
+        if (this.id === undefined)
             throw new Error('Id is undefined');
-        return this._irrigationLogRepository.getIrrigationLogAsync(this.irrigationLogId);
+        return this._irrigationLogRepository.getIrrigationLogAsync(this.id);
     }
 }
 exports.GetIrrigationLogCommand = GetIrrigationLogCommand;

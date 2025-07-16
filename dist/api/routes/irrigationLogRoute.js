@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const irrigationLogController_1 = require("../controllers/irrigationLogController");
+const irrigationLogRepository_1 = require("../../infrastructure/repositories/irrigationLogRepository");
+const router = (0, express_1.Router)();
+const irrigationLogRepository = new irrigationLogRepository_1.IrrigationLogRepository();
+const controller = new irrigationLogController_1.IrrigationLogController(irrigationLogRepository);
+router.get('/IrrigationLog/:id', controller.getIrrigationLogAsync);
+router.get('/IrrigationLog/getIrrigationLogsList/', controller.getIrrigationLogsListAsync);
+router.post('/IrrigationLog/create/', controller.createIrrigationLogAsync);
+exports.default = router;

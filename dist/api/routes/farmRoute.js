@@ -13,7 +13,7 @@ const farmRepository_1 = require("../../infrastructure/repositories/farmReposito
 const router = (0, express_1.Router)();
 const farmRepository = new farmRepository_1.FarmRepository();
 const controller = new farmController_1.FarmController(farmRepository);
-router.get('/farm/:id', controller.getFarmAsync);
+router.get('/farm/getfarm/:id', controller.getFarmAsync);
 router.get('/farm/getfarmsList/', controller.getFarmsListAsync);
 router.post('/farm/create/', controller.createFarmAsync);
 router.put('/farm/update/', controller.updateFarmAsync);

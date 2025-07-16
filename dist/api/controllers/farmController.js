@@ -43,6 +43,7 @@ class FarmController {
         };
         this.createFarmAsync = async (req, res) => {
             try {
+                console.log("Come here");
                 const farmData = req.body;
                 const command = new createFarmCommand_1.CreateFarmCommand(this._farmRepository);
                 command.farmData = farmData;
