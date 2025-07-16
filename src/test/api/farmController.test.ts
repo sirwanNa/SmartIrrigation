@@ -3,6 +3,7 @@ import axios from 'axios';
 import {FarmType} from '../../core/domain/enums/farmType'
 import {IrrigationType} from '../../core/domain/enums/irrigationType'
 import {FarmDTO} from '../../core/application/dTOs/farmDTO'
+import {FarmController} from '../../../src/api/controllers/farmController'
 
 const baseURL = 'http://localhost:4000'; // Change this to your API base
 let createdFarmId: number;
