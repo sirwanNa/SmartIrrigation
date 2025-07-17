@@ -10,6 +10,6 @@ export interface FieldDTO extends BaseModel {
   areaSize: number; // in hectares
   latitude: number;
   longitude: number;
-  FarmId?: number;
-  CultivationDate:Date;
+  farmId?: number;
+  cultivationDate:Date;
 }

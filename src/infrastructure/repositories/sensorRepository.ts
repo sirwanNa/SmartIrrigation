@@ -1,44 +1,54 @@
 import { ISensorRepository } from '../../core/application/interface/repositories/iSensorRepository';
 import { SensorDTO } from '../../core/application/dTOs/sensorDTO';
 import { List } from '../../share/utilities/list';
+import { BaseRepository } from './baseRepository';
+import { UnitOfWork } from '../data/unitofWork';
+import { Filter } from 'mongodb';
+import { Sensor } from '../../core/domain/entities/sensor';
 
-export class SensorRepository implements ISensorRepository {
-  private Sensors: SensorDTO[] = [];
+export class SensorRepository extends BaseRepository<Sensor> implements ISensorRepository {
 
-  public async getSensorAsync(id: number): Promise<SensorDTO> {
-    const Sensor = this.Sensors.find(f => f.id === id);
-    if (!Sensor) {
-      throw new Error(`Sensor with ID ${id} not found`);
-    }
-    return Sensor;
+  constructor(uow: UnitOfWork) {
+    super(uow, 'sensors');
+  }
+  
+  private toDTO(entity: Sensor): SensorDTO {
+    const { id, name, createdDate,sensorType,fieldId,depthCm,latitude,longitude,unit,installationDate,status } = entity;
+    return { id, name, createdDate,sensorType,fieldId,depthCm,latitude,longitude,unit,installationDate,status  };
   }
 
-  public async getSensorsListAsync(): Promise<List<SensorDTO>> {
-    const list = new List<SensorDTO>();    
+  private fromDTO(dto: SensorDTO): Sensor {
+    const { id, name, createdDate,sensorType,fieldId,depthCm,latitude,longitude,unit,installationDate,status  } = dto;
+    return { id, name, createdDate,sensorType,fieldId,depthCm,latitude,longitude,unit,installationDate,status  };
+  }
+
+  public async getSensorAsync(id: number): Promise<SensorDTO> {
+    const entity = await this.getById(id);
+    if (!entity) throw new Error(`Sensor with ID ${id} not found`);
+    return this.toDTO(entity);
+  }
+
+  public async getSensorsListAsync(): Promise<List<SensorDTO>> {    
+    const entities = await this.getAll();
+    const list = new List<SensorDTO>(entities);    
     return list;
   }
 
-  public async createAsync(Sensor: SensorDTO): Promise<boolean> {
-    const exists = this.Sensors.some(f => f.id === Sensor.id);
-    if (exists) return false;
-
-    this.Sensors.push(Sensor);
-    return true;
+  public async createAsync(sensor: SensorDTO): Promise<boolean> {
+    const existing = await this.getById(sensor.id);
+    if (existing) return false;
+    const entity = this.fromDTO(sensor);
+    return await this.create(entity);
   }
 
-  public async updateAsync(Sensor: SensorDTO): Promise<boolean> {
-    const index = this.Sensors.findIndex(f => f.id === Sensor.id);
-    if (index === -1) return false;
-
-    this.Sensors[index] = Sensor;
-    return true;
+  public async updateAsync(sensor: SensorDTO): Promise<boolean> {
+    await this.checkObjectIsExist(sensor.id);
+    const entity = this.fromDTO(sensor);
+    return await this.update(entity);
   }
 
   public async removeAsync(id: number): Promise<boolean> {
-    const index = this.Sensors.findIndex(f => f.id === id);
-    if (index === -1) return false;
-
-    this.Sensors.splice(index, 1);
-    return true;
+     await this.checkObjectIsExist(id);
+     return await this.delete(id);
   }
 }

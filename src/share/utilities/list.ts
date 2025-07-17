@@ -1,6 +1,10 @@
 export class List<T> {
   private items: T[] = [];
-
+  constructor(itemsList?: T[]){
+    if(itemsList !== undefined){
+      this.items = itemsList;
+    }   
+  }
   add(item: T): void {
     this.items.push(item);
   }

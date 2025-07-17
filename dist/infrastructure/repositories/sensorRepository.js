@@ -2,41 +2,45 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SensorRepository = void 0;
 const list_1 = require("../../share/utilities/list");
-class SensorRepository {
-    constructor() {
-        this.Sensors = [];
+const baseRepository_1 = require("./baseRepository");
+class SensorRepository extends baseRepository_1.BaseRepository {
+    constructor(uow) {
+        super(uow, 'sensors');
+    }
+    toDTO(entity) {
+        const { id, name, createdDate, sensorType, fieldId, depthCm, latitude, longitude, unit, installationDate, status } = entity;
+        return { id, name, createdDate, sensorType, fieldId, depthCm, latitude, longitude, unit, installationDate, status };
+    }
+    fromDTO(dto) {
+        const { id, name, createdDate, sensorType, fieldId, depthCm, latitude, longitude, unit, installationDate, status } = dto;
+        return { id, name, createdDate, sensorType, fieldId, depthCm, latitude, longitude, unit, installationDate, status };
     }
     async getSensorAsync(id) {
-        const Sensor = this.Sensors.find(f => f.id === id);
-        if (!Sensor) {
+        const entity = await this.getById(id);
+        if (!entity)
             throw new Error(`Sensor with ID ${id} not found`);
-        }
-        return Sensor;
+        return this.toDTO(entity);
     }
     async getSensorsListAsync() {
-        const list = new list_1.List();
+        const entities = await this.getAll();
+        const list = new list_1.List(entities);
         return list;
     }
-    async createAsync(Sensor) {
-        const exists = this.Sensors.some(f => f.id === Sensor.id);
-        if (exists)
+    async createAsync(sensor) {
+        const existing = await this.getById(sensor.id);
+        if (existing)
             return false;
-        this.Sensors.push(Sensor);
-        return true;
+        const entity = this.fromDTO(sensor);
+        return await this.create(entity);
     }
-    async updateAsync(Sensor) {
-        const index = this.Sensors.findIndex(f => f.id === Sensor.id);
-        if (index === -1)
-            return false;
-        this.Sensors[index] = Sensor;
-        return true;
+    async updateAsync(sensor) {
+        await this.checkObjectIsExist(sensor.id);
+        const entity = this.fromDTO(sensor);
+        return await this.update(entity);
     }
     async removeAsync(id) {
-        const index = this.Sensors.findIndex(f => f.id === id);
-        if (index === -1)
-            return false;
-        this.Sensors.splice(index, 1);
-        return true;
+        await this.checkObjectIsExist(id);
+        return await this.delete(id);
     }
 }
 exports.SensorRepository = SensorRepository;

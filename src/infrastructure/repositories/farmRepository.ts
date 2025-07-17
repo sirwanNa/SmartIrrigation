@@ -28,8 +28,7 @@ export class FarmRepository extends BaseRepository<Farm> implements IFarmReposit
 
   public async getFarmsListAsync(): Promise<List<FarmDTO>> {
     const entities = await this.getAll();
-    const list = new List<FarmDTO>();
-    entities.forEach(e => list.add(this.toDTO(e)));
+    const list = new List<FarmDTO>(entities);    
     return list;
   }
 
@@ -41,11 +40,13 @@ export class FarmRepository extends BaseRepository<Farm> implements IFarmReposit
   }
 
   public async updateAsync(farm: FarmDTO): Promise<boolean> {
+    await this.checkObjectIsExist(farm.id);
     const entity = this.fromDTO(farm);
     return await this.update(entity);
   }
 
   public async removeAsync(id: number): Promise<boolean> {
+    await this.checkObjectIsExist(id);
     return await this.delete(id);
   }
 }

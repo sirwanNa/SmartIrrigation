@@ -8,16 +8,18 @@ const irrigationType_1 = require("../../../core/domain/enums/irrigationType");
 const unitofWork_1 = require("../../../infrastructure/data/unitofWork");
 const mongoContext_1 = require("../../../infrastructure/data/mongoContext");
 async function testFarmCommands() {
-    var mongoContext = new mongoContext_1.MongoContext("localhost:70125", "smartIrrigation");
+    const uri = 'mongodb://localhost:27017';
+    const dbName = 'smartIrrigation';
+    var mongoContext = new mongoContext_1.MongoContext(uri, dbName);
     var uow = new unitofWork_1.UnitOfWork(mongoContext);
     var farmRepository = new farmRepository_1.FarmRepository(uow);
     var createFarmCommand = new createFarmCommand_1.CreateFarmCommand(farmRepository);
     createFarmCommand.farmData = {
-        createdDate: new Date('1/1/2025'),
+        createdDate: new Date('2/1/2025'),
         farmType: farmType_1.FarmType.FieldCrop,
         irrigationType: irrigationType_1.IrrigationType.Drip,
-        name: 'Farm1',
-        id: 1
+        name: 'Farm2',
+        id: 2
     };
     const result = await createFarmCommand.executeAsync();
     console.log("Create Farm Result :", result);

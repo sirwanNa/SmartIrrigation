@@ -17,8 +17,8 @@ class BaseRepository {
         const result = await this.collection.findOne({ id }, { session: this.uow.getSession() });
         return result ? this.stripMongoId(result) : null;
     }
-    async getAll() {
-        const results = await this.collection.find({}, { session: this.uow.getSession() }).toArray();
+    async getAll(filter) {
+        const results = await this.collection.find(filter !== undefined ? filter : {}, { session: this.uow.getSession() }).toArray();
         return results.map(doc => this.stripMongoId(doc));
     }
     async create(entity) {
@@ -32,6 +32,11 @@ class BaseRepository {
     async delete(id) {
         const result = await this.collection.deleteOne({ id }, { session: this.uow.getSession() });
         return result.deletedCount > 0;
+    }
+    async checkObjectIsExist(id) {
+        const obj = await this.getById(id);
+        if (!obj)
+            throw new Error(`Object with ID ${id} not found`);
     }
 }
 exports.BaseRepository = BaseRepository;

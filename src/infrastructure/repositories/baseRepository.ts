@@ -27,9 +27,9 @@ export abstract class BaseRepository<T extends BaseEntity> {
     return result ? this.stripMongoId(result as WithId<T>) : null;
   }
 
-  public async getAll(): Promise<T[]> {
+  public async getAll(filter?:Filter<T>): Promise<T[]> {
     const results = await this.collection.find(
-      {},
+      filter !== undefined? filter:{},
       { session: this.uow.getSession() }
     ).toArray();
 
@@ -59,5 +59,9 @@ export abstract class BaseRepository<T extends BaseEntity> {
       { session: this.uow.getSession() }
     );
     return result.deletedCount > 0;
+  }
+ protected async checkObjectIsExist(id: number) {
+    const obj = await this.getById(id);
+    if (!obj) throw new Error(`Object with ID ${id} not found`);
   }
 }

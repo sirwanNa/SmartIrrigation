@@ -1,44 +1,54 @@
 import { IFieldRepository } from '../../core/application/interface/repositories/iFieldRepository';
 import { FieldDTO } from '../../core/application/dTOs/fieldDTO';
 import { List } from '../../share/utilities/list';
+import { BaseRepository } from './baseRepository';
+import { UnitOfWork } from '../data/unitofWork';
+import { Field } from '../../core/domain/entities/field';
+import { Filter } from 'mongodb';
 
-export class FieldRepository implements IFieldRepository {
-  private Fields: FieldDTO[] = [];
+export class FieldRepository extends BaseRepository<Field> implements IFieldRepository {
+    constructor(uow: UnitOfWork) {
+    super(uow, 'fields');
+  }
+
+  private toDTO(entity: Field): FieldDTO {
+    const { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate } = entity;
+    return { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate };
+  }
+
+  private fromDTO(dto: FieldDTO): Field {
+    const { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate } = dto;
+    return { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate };
+  }
 
   public async getFieldAsync(id: number): Promise<FieldDTO> {
-    const Field = this.Fields.find(f => f.id === id);
-    if (!Field) {
-      throw new Error(`Field with ID ${id} not found`);
-    }
-    return Field;
+    const entity = await this.getById(id);
+    if (!entity) throw new Error(`Field with ID ${id} not found`);
+    return this.toDTO(entity);
   }
 
   public async getFieldsListAsync(farmdId:number): Promise<List<FieldDTO>> {
-    const list = new List<FieldDTO>();    
+    var filter = {farmdId} as Filter<Field>;
+    const entities = await this.getAll(filter);
+    const list = new List<FieldDTO>(entities);    
     return list;
   }
 
-  public async createAsync(Field: FieldDTO): Promise<boolean> {
-    const exists = this.Fields.some(f => f.id === Field.id);
-    if (exists) return false;
-
-    this.Fields.push(Field);
-    return true;
+  public async createAsync(field: FieldDTO): Promise<boolean> {
+    const existing = await this.getById(field.id);
+    if (existing) return false;
+    const entity = this.fromDTO(field);
+    return await this.create(entity);
   }
 
-  public async updateAsync(Field: FieldDTO): Promise<boolean> {
-    const index = this.Fields.findIndex(f => f.id === Field.id);
-    if (index === -1) return false;
-
-    this.Fields[index] = Field;
-    return true;
+  public async updateAsync(field: FieldDTO): Promise<boolean> {
+    await this.checkObjectIsExist(field.id);
+    const entity = this.fromDTO(field);
+    return await this.update(entity);
   }
 
   public async removeAsync(id: number): Promise<boolean> {
-    const index = this.Fields.findIndex(f => f.id === id);
-    if (index === -1) return false;
-
-    this.Fields.splice(index, 1);
-    return true;
+     await this.checkObjectIsExist(id);
+     return await this.delete(id);
   }
 }

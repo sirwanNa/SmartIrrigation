@@ -2,8 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.List = void 0;
 class List {
-    constructor() {
+    constructor(itemsList) {
         this.items = [];
+        if (itemsList !== undefined) {
+            this.items = itemsList;
+        }
     }
     add(item) {
         this.items.push(item);

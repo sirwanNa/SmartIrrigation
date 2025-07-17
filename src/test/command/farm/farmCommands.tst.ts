@@ -8,16 +8,18 @@ import { UnitOfWork } from '../../../infrastructure/data/unitofWork'
 import { MongoContext } from '../../../infrastructure/data/mongoContext'
 
 async function testFarmCommands(){
-    var mongoContext:MongoContext = new MongoContext("localhost:70125","smartIrrigation");
+    const uri = 'mongodb://localhost:27017';
+    const dbName = 'smartIrrigation';
+    var mongoContext:MongoContext = new MongoContext(uri,dbName);
     var uow:UnitOfWork = new UnitOfWork(mongoContext);
     var farmRepository:IFarmRepository = new FarmRepository(uow);
     var createFarmCommand = new CreateFarmCommand(farmRepository);
     createFarmCommand.farmData =  {
-        createdDate :new Date('1/1/2025'),
+        createdDate :new Date('2/1/2025'),
         farmType :FarmType.FieldCrop,
         irrigationType : IrrigationType.Drip,
-        name:'Farm1',
-        id:1
+        name:'Farm2',
+        id:2
     };
 
     const result: boolean = await createFarmCommand.executeAsync();

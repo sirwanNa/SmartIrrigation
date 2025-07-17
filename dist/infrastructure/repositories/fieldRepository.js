@@ -2,41 +2,46 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FieldRepository = void 0;
 const list_1 = require("../../share/utilities/list");
-class FieldRepository {
-    constructor() {
-        this.Fields = [];
+const baseRepository_1 = require("./baseRepository");
+class FieldRepository extends baseRepository_1.BaseRepository {
+    constructor(uow) {
+        super(uow, 'fields');
+    }
+    toDTO(entity) {
+        const { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate } = entity;
+        return { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate };
+    }
+    fromDTO(dto) {
+        const { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate } = dto;
+        return { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate };
     }
     async getFieldAsync(id) {
-        const Field = this.Fields.find(f => f.id === id);
-        if (!Field) {
+        const entity = await this.getById(id);
+        if (!entity)
             throw new Error(`Field with ID ${id} not found`);
-        }
-        return Field;
+        return this.toDTO(entity);
     }
     async getFieldsListAsync(farmdId) {
-        const list = new list_1.List();
+        var filter = { farmdId };
+        const entities = await this.getAll(filter);
+        const list = new list_1.List(entities);
         return list;
     }
-    async createAsync(Field) {
-        const exists = this.Fields.some(f => f.id === Field.id);
-        if (exists)
+    async createAsync(field) {
+        const existing = await this.getById(field.id);
+        if (existing)
             return false;
-        this.Fields.push(Field);
-        return true;
+        const entity = this.fromDTO(field);
+        return await this.create(entity);
     }
-    async updateAsync(Field) {
-        const index = this.Fields.findIndex(f => f.id === Field.id);
-        if (index === -1)
-            return false;
-        this.Fields[index] = Field;
-        return true;
+    async updateAsync(field) {
+        await this.checkObjectIsExist(field.id);
+        const entity = this.fromDTO(field);
+        return await this.update(entity);
     }
     async removeAsync(id) {
-        const index = this.Fields.findIndex(f => f.id === id);
-        if (index === -1)
-            return false;
-        this.Fields.splice(index, 1);
-        return true;
+        await this.checkObjectIsExist(id);
+        return await this.delete(id);
     }
 }
 exports.FieldRepository = FieldRepository;

@@ -14,9 +14,11 @@ import {IFarmRepository} from '../../core/application/interface/repositories/iFa
 import {FarmRepository} from '../../infrastructure/repositories/farmRepository'
 import { MongoContext } from '../../infrastructure/data/mongoContext';
 import { UnitOfWork } from '../../infrastructure/data/unitofWork';
+const uri = 'mongodb://localhost:27017';
+const dbName = 'smartIrrigation';
 
 const router = Router();
-var mongoContext:MongoContext = new MongoContext("localhost:70125","smartIrrigation");
+var mongoContext:MongoContext = new MongoContext(uri,dbName);
 var uow:UnitOfWork = new UnitOfWork(mongoContext);
 const farmRepository: IFarmRepository = new FarmRepository(uow);
 const controller = new FarmController(farmRepository);

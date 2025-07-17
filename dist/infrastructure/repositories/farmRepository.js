@@ -23,8 +23,7 @@ class FarmRepository extends baseRepository_1.BaseRepository {
     }
     async getFarmsListAsync() {
         const entities = await this.getAll();
-        const list = new list_1.List();
-        entities.forEach(e => list.add(this.toDTO(e)));
+        const list = new list_1.List(entities);
         return list;
     }
     async createAsync(farm) {
@@ -35,10 +34,12 @@ class FarmRepository extends baseRepository_1.BaseRepository {
         return await this.create(entity);
     }
     async updateAsync(farm) {
+        await this.checkObjectIsExist(farm.id);
         const entity = this.fromDTO(farm);
         return await this.update(entity);
     }
     async removeAsync(id) {
+        await this.checkObjectIsExist(id);
         return await this.delete(id);
     }
 }

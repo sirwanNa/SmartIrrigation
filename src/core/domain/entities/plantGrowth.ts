@@ -1,5 +1,5 @@
 import {BaseEntity} from './baseEntity'
-export interface plantGrowth extends BaseEntity{
+export interface PlantGrowth extends BaseEntity{
    fieldId:number;
    size:number;
 }
