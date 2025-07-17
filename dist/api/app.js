@@ -4,12 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const farmRoute_1 = __importDefault(require("./routes/farmRoute"));
-const fieldRoute_1 = __importDefault(require("./routes/fieldRoute"));
-const sensorRoute_1 = __importDefault(require("./routes/sensorRoute"));
-const sensorLogRoute_1 = __importDefault(require("./routes/sensorLogRoute"));
-const plantGrowthRoute_1 = __importDefault(require("./routes/plantGrowthRoute"));
-const irrigationLogRoute_1 = __importDefault(require("./routes/irrigationLogRoute"));
+const routeHandler_1 = require("./routes/routeHandler");
 const app = (0, express_1.default)();
 // Middleware
 app.use(express_1.default.json());
@@ -17,10 +12,6 @@ app.use(express_1.default.json());
 app.get('/', (req, res) => {
     res.send('Smart Irrigation API is running...');
 });
-app.use('/api/v1', farmRoute_1.default);
-app.use('/api/v1', fieldRoute_1.default);
-app.use('/api/v1', sensorRoute_1.default);
-app.use('/api/v1', sensorLogRoute_1.default);
-app.use('/api/v1', plantGrowthRoute_1.default);
-app.use('/api/v1', irrigationLogRoute_1.default);
+var routeHandler = new routeHandler_1.RouteHandlers();
+app.use('/api/v1', routeHandler.getRoutes());
 exports.default = app;
