@@ -7,24 +7,73 @@ const farmType_1 = require("../../../core/domain/enums/farmType");
 const irrigationType_1 = require("../../../core/domain/enums/irrigationType");
 const unitofWork_1 = require("../../../infrastructure/data/unitofWork");
 const mongoContext_1 = require("../../../infrastructure/data/mongoContext");
+const getFarmCommand_1 = require("../../../core/application/commands/farm/getFarmCommand");
+const updateFarmCommand_1 = require("../../../core/application/commands/farm/updateFarmCommand");
+const deleteFarmCommand_1 = require("../../../core/application/commands/farm/deleteFarmCommand");
+// async function testFarmCommands(){
+//     const uri = 'mongodb://localhost:27017';
+//     const dbName = 'smartIrrigation';
+//     var mongoContext:MongoContext = new MongoContext(uri,dbName);
+//     var uow:UnitOfWork = new UnitOfWork(mongoContext);
+//     var farmRepository:IFarmRepository = new FarmRepository(uow);
+//     var createFarmCommand = new CreateFarmCommand(farmRepository);
+//     createFarmCommand.farmData =  {
+//         createdDate :new Date('2/1/2025'),
+//         farmType :FarmType.FieldCrop,
+//         irrigationType : IrrigationType.Drip,
+//         name:'Farm2',
+//         id:2
+//     };
+//     const result: boolean = await createFarmCommand.executeAsync();
+//     console.log("Create Farm Result :",result);
+//     var getFarmsListCommand:GetFarmsListCommand = new GetFarmsListCommand(farmRepository);
+//     var farmsList = await getFarmsListCommand.executeAsync();
+//     console.log('farms List:',farmsList);
+// } 
 async function testFarmCommands() {
     const uri = 'mongodb://localhost:27017';
     const dbName = 'smartIrrigation';
-    var mongoContext = new mongoContext_1.MongoContext(uri, dbName);
-    var uow = new unitofWork_1.UnitOfWork(mongoContext);
-    var farmRepository = new farmRepository_1.FarmRepository(uow);
-    var createFarmCommand = new createFarmCommand_1.CreateFarmCommand(farmRepository);
+    const mongoContext = new mongoContext_1.MongoContext(uri, dbName);
+    const uow = new unitofWork_1.UnitOfWork(mongoContext);
+    const farmRepository = new farmRepository_1.FarmRepository(uow);
+    const farmId = 999; // Ensure unique for testing
+    // 1. Create a Farm
+    const createFarmCommand = new createFarmCommand_1.CreateFarmCommand(farmRepository);
     createFarmCommand.farmData = {
-        createdDate: new Date('2/1/2025'),
-        farmType: farmType_1.FarmType.FieldCrop,
+        id: farmId,
+        name: 'Test Farm',
+        farmType: farmType_1.FarmType.Greenhouse,
         irrigationType: irrigationType_1.IrrigationType.Drip,
-        name: 'Farm2',
-        id: 2
+        createdDate: new Date(),
     };
-    const result = await createFarmCommand.executeAsync();
-    console.log("Create Farm Result :", result);
-    var getFarmsListCommand = new getFarmsListCommand_1.GetFarmsListCommand(farmRepository);
-    var farmsList = await getFarmsListCommand.executeAsync();
-    console.log('farms List:', farmsList);
+    const created = await createFarmCommand.executeAsync();
+    console.log('Create Farm Result:', created);
+    // 2. Get all Farms
+    const getFarmsListCommand = new getFarmsListCommand_1.GetFarmsListCommand(farmRepository);
+    const farmsList = await getFarmsListCommand.executeAsync();
+    console.log('Farms List:', farmsList);
+    // 3. Get single Farm by ID
+    const getFarmCommand = new getFarmCommand_1.GetFarmCommand(farmRepository);
+    getFarmCommand.FarmId = farmId;
+    const singleFarm = await getFarmCommand.executeAsync();
+    console.log('Get Farm by ID:', singleFarm);
+    // 4. Update Farm
+    const updateFarmCommand = new updateFarmCommand_1.UpdateFarmCommand(farmRepository);
+    updateFarmCommand.farmData = {
+        ...singleFarm,
+        name: 'Updated Test Farm',
+    };
+    const updated = await updateFarmCommand.executeAsync();
+    console.log('Update Farm Result:', updated);
+    // 5. Delete Farm
+    const deleteFarmCommand = new deleteFarmCommand_1.DeleteFarmCommand(farmRepository);
+    deleteFarmCommand.FarmId = farmId;
+    const deleted = await deleteFarmCommand.executeAsync();
+    console.log('Delete Farm Result:', deleted);
+    // 6. Try Get Deleted Farm
+    const checkDeleted = new getFarmCommand_1.GetFarmCommand(farmRepository);
+    checkDeleted.FarmId = farmId;
+    const deletedFarm = await checkDeleted.executeAsync();
+    console.log('Deleted Farm (Should be null or undefined):', deletedFarm);
 }
 testFarmCommands();
