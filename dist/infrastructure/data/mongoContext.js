@@ -2,11 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoContext = void 0;
 const mongodb_1 = require("mongodb");
+const databaseConfig_1 = require("../config/databaseConfig");
 class MongoContext {
-    constructor(uri, dbName) {
+    constructor() {
         this.session = null;
-        this.client = new mongodb_1.MongoClient(uri);
-        this.db = this.client.db(dbName);
+        var dataBaseConfig = databaseConfig_1.MongoConfig.getSettings();
+        this.client = new mongodb_1.MongoClient(dataBaseConfig.uri);
+        this.db = this.client.db(dataBaseConfig.dbName);
     }
     async connect() {
         await this.client.connect();

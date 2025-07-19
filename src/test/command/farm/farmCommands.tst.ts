@@ -11,34 +11,10 @@ import { FarmDTO } from '../../../core/application/dTOs/farmDTO'
 import { UpdateFarmCommand } from '../../../core/application/commands/farm/updateFarmCommand'
 import { DeleteFarmCommand } from '../../../core/application/commands/farm/deleteFarmCommand'
 
-// async function testFarmCommands(){
-//     const uri = 'mongodb://localhost:27017';
-//     const dbName = 'smartIrrigation';
-//     var mongoContext:MongoContext = new MongoContext(uri,dbName);
-//     var uow:UnitOfWork = new UnitOfWork(mongoContext);
-//     var farmRepository:IFarmRepository = new FarmRepository(uow);
-//     var createFarmCommand = new CreateFarmCommand(farmRepository);
-//     createFarmCommand.farmData =  {
-//         createdDate :new Date('2/1/2025'),
-//         farmType :FarmType.FieldCrop,
-//         irrigationType : IrrigationType.Drip,
-//         name:'Farm2',
-//         id:2
-//     };
 
-//     const result: boolean = await createFarmCommand.executeAsync();
-//     console.log("Create Farm Result :",result);
+async function testFarmCommands() { 
 
-//     var getFarmsListCommand:GetFarmsListCommand = new GetFarmsListCommand(farmRepository);
-//     var farmsList = await getFarmsListCommand.executeAsync();
-//     console.log('farms List:',farmsList);
-// } 
-
-async function testFarmCommands() {
-  const uri = 'mongodb://localhost:27017';
-  const dbName = 'smartIrrigation';
-
-  const mongoContext = new MongoContext(uri, dbName);
+  const mongoContext = new MongoContext();
   const uow = new UnitOfWork(mongoContext);
   const farmRepository: IFarmRepository = new FarmRepository(uow);
 
@@ -82,12 +58,7 @@ async function testFarmCommands() {
   deleteFarmCommand.FarmId = farmId;
   const deleted: boolean = await deleteFarmCommand.executeAsync();
   console.log('Delete Farm Result:', deleted);
-
-  // 6. Try Get Deleted Farm
-  const checkDeleted = new GetFarmCommand(farmRepository);
-  checkDeleted.FarmId = farmId;
-  const deletedFarm = await checkDeleted.executeAsync();
-  console.log('Deleted Farm (Should be null or undefined):', deletedFarm);
+  
 }
 
 testFarmCommands();

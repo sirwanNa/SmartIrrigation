@@ -16,8 +16,6 @@ const sensorLogController_1 = require("../controllers/sensorLogController");
 const sensorLogRepository_1 = require("../../infrastructure/repositories/sensorLogRepository");
 const sensorRepository_1 = require("../../infrastructure/repositories/sensorRepository");
 const sensorController_1 = require("../controllers/sensorController");
-const uri = 'mongodb://localhost:27017';
-const dbName = 'smartIrrigation';
 class RouteHandlers {
     constructor() {
         this.router = (0, express_1.Router)();
@@ -42,18 +40,18 @@ class RouteHandlers {
         this.fieldAPIs = () => {
             const fieldRepository = new fieldRepository_1.FieldRepository(this.uow);
             const controller = new fieldController_1.FieldController(fieldRepository);
-            this.router.get('/Field/:id', controller.getFieldAsync);
-            this.router.get('/Field/getFieldsList/', controller.getFieldsListAsync);
-            this.router.post('/Field/create/', controller.createFieldAsync);
-            this.router.put('/Field/update/', controller.updateFieldAsync);
-            this.router.delete('/Field/delete/', controller.deleteFieldAsync);
+            this.router.get('/field/:id', controller.getFieldAsync);
+            this.router.get('/field/getFieldsList/', controller.getFieldsListAsync);
+            this.router.post('/field/create/', controller.createFieldAsync);
+            this.router.put('/field/update/', controller.updateFieldAsync);
+            this.router.delete('/field/delete/', controller.deleteFieldAsync);
         };
         this.irrigationLogAPIs = () => {
             const irrigationLogRepository = new irrigationLogRepository_1.IrrigationLogRepository(this.uow);
             const controller = new irrigationLogController_1.IrrigationLogController(irrigationLogRepository);
-            this.router.get('/IrrigationLog/:id', controller.getIrrigationLogAsync);
-            this.router.get('/IrrigationLog/getIrrigationLogsList/', controller.getIrrigationLogsListAsync);
-            this.router.post('/IrrigationLog/create/', controller.createIrrigationLogAsync);
+            this.router.get('/irrigationLog/:id', controller.getIrrigationLogAsync);
+            this.router.get('/irrigationLog/getIrrigationLogsList/', controller.getIrrigationLogsListAsync);
+            this.router.post('/irrigationLog/create/', controller.createIrrigationLogAsync);
         };
         this.plantGrowthAPIs = () => {
             const plantGrowthRepository = new plantGrowthRepository_1.PlantGrowthRepository(this.uow);
@@ -67,9 +65,9 @@ class RouteHandlers {
         this.sensorLogAPIs = () => {
             const sensorLogRepository = new sensorLogRepository_1.SensorLogRepository(this.uow);
             const controller = new sensorLogController_1.SensorLogController(sensorLogRepository);
-            this.router.get('/SensorLog/:id', controller.getSensorLogAsync);
-            this.router.get('/SensorLog/getSensorLogsList/', controller.getSensorLogsListAsync);
-            this.router.post('/SensorLog/create/', controller.createSensorLogAsync);
+            this.router.get('/sensorLog/:id', controller.getSensorLogAsync);
+            this.router.get('/sensorLog/getSensorLogsList/', controller.getSensorLogsListAsync);
+            this.router.post('/sensorLog/create/', controller.createSensorLogAsync);
         };
         this.sensorAPIs = () => {
             const sensorRepository = new sensorRepository_1.SensorRepository(this.uow);
@@ -80,7 +78,7 @@ class RouteHandlers {
             this.router.put('/sensor/update/', controller.updateSensorAsync);
             this.router.delete('/sensor/delete/', controller.deleteSensorAsync);
         };
-        this.mongoContext = new mongoContext_1.MongoContext(uri, dbName);
+        this.mongoContext = new mongoContext_1.MongoContext();
         this.uow = new unitofWork_1.UnitOfWork(this.mongoContext);
     }
 }

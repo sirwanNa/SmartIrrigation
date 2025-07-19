@@ -1,13 +1,15 @@
 import { MongoClient, Db, ClientSession } from "mongodb";
+import {MongoConfig,CustomMongoSettings} from '../config/databaseConfig'
 
 export class MongoContext {
   private client: MongoClient;
   public db: Db;
   public session: ClientSession | null = null;
 
-  constructor(uri: string, dbName: string) {
-    this.client = new MongoClient(uri);
-    this.db = this.client.db(dbName);
+  constructor() {
+    var dataBaseConfig:CustomMongoSettings=MongoConfig.getSettings();
+    this.client = new MongoClient(dataBaseConfig.uri);
+    this.db = this.client.db(dataBaseConfig.dbName);
   }
 
   async connect() {

@@ -19,15 +19,13 @@ import { ISensorLogRepository } from '../../core/application/interface/repositor
 import { ISensorRepository } from '../../core/application/interface/repositories/iSensorRepository';
 import { SensorRepository } from '../../infrastructure/repositories/sensorRepository';
 import { SensorController } from '../controllers/sensorController';
-const uri = 'mongodb://localhost:27017';
-const dbName = 'smartIrrigation';
 
 export class RouteHandlers{
     private router = Router();
     private readonly mongoContext:MongoContext;
     private readonly uow:UnitOfWork;
     constructor(){
-        this.mongoContext = new MongoContext(uri,dbName);
+        this.mongoContext = new MongoContext();
         this.uow = new UnitOfWork(this.mongoContext);
     }
     getRoutes=():Router=>{
@@ -53,19 +51,19 @@ export class RouteHandlers{
         const fieldRepository: IFieldRepository = new FieldRepository(this.uow);
         const controller = new FieldController(fieldRepository);
         
-        this.router.get('/Field/:id', controller.getFieldAsync);
-        this.router.get('/Field/getFieldsList/',controller.getFieldsListAsync);
-        this.router.post('/Field/create/',controller.createFieldAsync);
-        this.router.put('/Field/update/',controller.updateFieldAsync);
-        this.router.delete('/Field/delete/',controller.deleteFieldAsync);
+        this.router.get('/field/:id', controller.getFieldAsync);
+        this.router.get('/field/getFieldsList/',controller.getFieldsListAsync);
+        this.router.post('/field/create/',controller.createFieldAsync);
+        this.router.put('/field/update/',controller.updateFieldAsync);
+        this.router.delete('/field/delete/',controller.deleteFieldAsync);
     }
     irrigationLogAPIs = ()=>{
         const irrigationLogRepository: IIrrigationLogRepository = new IrrigationLogRepository(this.uow);
         const controller = new IrrigationLogController(irrigationLogRepository);
         
-        this.router.get('/IrrigationLog/:id', controller.getIrrigationLogAsync);
-        this.router.get('/IrrigationLog/getIrrigationLogsList/',controller.getIrrigationLogsListAsync);
-        this.router.post('/IrrigationLog/create/',controller.createIrrigationLogAsync);
+        this.router.get('/irrigationLog/:id', controller.getIrrigationLogAsync);
+        this.router.get('/irrigationLog/getIrrigationLogsList/',controller.getIrrigationLogsListAsync);
+        this.router.post('/irrigationLog/create/',controller.createIrrigationLogAsync);
     }
     plantGrowthAPIs =()=>{
         const plantGrowthRepository: IPlantGrowthRepository = new PlantGrowthRepository(this.uow);
@@ -80,9 +78,9 @@ export class RouteHandlers{
         const sensorLogRepository: ISensorLogRepository = new SensorLogRepository(this.uow);
         const controller = new SensorLogController(sensorLogRepository);
         
-        this.router.get('/SensorLog/:id', controller.getSensorLogAsync);
-        this.router.get('/SensorLog/getSensorLogsList/',controller.getSensorLogsListAsync);
-        this.router.post('/SensorLog/create/',controller.createSensorLogAsync);
+        this.router.get('/sensorLog/:id', controller.getSensorLogAsync);
+        this.router.get('/sensorLog/getSensorLogsList/',controller.getSensorLogsListAsync);
+        this.router.post('/sensorLog/create/',controller.createSensorLogAsync);
     }
     sensorAPIs =()=>{
        const sensorRepository: ISensorRepository = new SensorRepository(this.uow);

@@ -10,30 +10,8 @@ const mongoContext_1 = require("../../../infrastructure/data/mongoContext");
 const getFarmCommand_1 = require("../../../core/application/commands/farm/getFarmCommand");
 const updateFarmCommand_1 = require("../../../core/application/commands/farm/updateFarmCommand");
 const deleteFarmCommand_1 = require("../../../core/application/commands/farm/deleteFarmCommand");
-// async function testFarmCommands(){
-//     const uri = 'mongodb://localhost:27017';
-//     const dbName = 'smartIrrigation';
-//     var mongoContext:MongoContext = new MongoContext(uri,dbName);
-//     var uow:UnitOfWork = new UnitOfWork(mongoContext);
-//     var farmRepository:IFarmRepository = new FarmRepository(uow);
-//     var createFarmCommand = new CreateFarmCommand(farmRepository);
-//     createFarmCommand.farmData =  {
-//         createdDate :new Date('2/1/2025'),
-//         farmType :FarmType.FieldCrop,
-//         irrigationType : IrrigationType.Drip,
-//         name:'Farm2',
-//         id:2
-//     };
-//     const result: boolean = await createFarmCommand.executeAsync();
-//     console.log("Create Farm Result :",result);
-//     var getFarmsListCommand:GetFarmsListCommand = new GetFarmsListCommand(farmRepository);
-//     var farmsList = await getFarmsListCommand.executeAsync();
-//     console.log('farms List:',farmsList);
-// } 
 async function testFarmCommands() {
-    const uri = 'mongodb://localhost:27017';
-    const dbName = 'smartIrrigation';
-    const mongoContext = new mongoContext_1.MongoContext(uri, dbName);
+    const mongoContext = new mongoContext_1.MongoContext();
     const uow = new unitofWork_1.UnitOfWork(mongoContext);
     const farmRepository = new farmRepository_1.FarmRepository(uow);
     const farmId = 999; // Ensure unique for testing
