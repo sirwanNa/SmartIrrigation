@@ -35,7 +35,7 @@ class RouteHandlers {
             this.router.get('/farm/getfarmsList/', controller.getFarmsListAsync);
             this.router.post('/farm/create/', controller.createFarmAsync);
             this.router.put('/farm/update/', controller.updateFarmAsync);
-            this.router.delete('/farm/delete/', controller.deleteFarmAsync);
+            this.router.delete('/farm/delete/:id', controller.deleteFarmAsync);
         };
         this.fieldAPIs = () => {
             const fieldRepository = new fieldRepository_1.FieldRepository(this.uow);

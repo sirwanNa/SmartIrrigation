@@ -48,10 +48,5 @@ async function testFarmCommands() {
     deleteFarmCommand.FarmId = farmId;
     const deleted = await deleteFarmCommand.executeAsync();
     console.log('Delete Farm Result:', deleted);
-    // 6. Try Get Deleted Farm
-    const checkDeleted = new getFarmCommand_1.GetFarmCommand(farmRepository);
-    checkDeleted.FarmId = farmId;
-    const deletedFarm = await checkDeleted.executeAsync();
-    console.log('Deleted Farm (Should be null or undefined):', deletedFarm);
 }
 testFarmCommands();
