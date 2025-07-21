@@ -1,1 +1,12 @@
-# SmartIrrigation
+Smart Irrigation System Using IoT, Machine Learning, and Federated Learning
+
+This project introduces a smart irrigation system designed to optimize water usage across various types of farms—greenhouses, traditional farms, and gardens—by leveraging IoT sensors and machine learning. The system improves crop quality and resource efficiency by predicting the optimal time and duration for irrigation based on real-time data like soil moisture and temperature. It also includes smart water flow control and provides recommendations to farmers tailored to geographical and crop-specific conditions. A history of irrigation events is recorded for further analysis and decision-making.
+
+The system’s structure is based on a hierarchical model where each farm consists of multiple fields growing the same type of crop. IoT sensors are deployed in rows within each field to collect critical environmental parameters such as soil moisture and ambient temperature. Using these inputs, each field independently trains several machine learning models—including Random Forest Regression, Recurrent Neural Networks (RNN), and Multivariate Linear Regression—to estimate irrigation needs. Input features for model training include crop type, soil type, temperature, farm type, plant size, and the month of the year.
+
+The collected sensor data is processed using a consensus algorithm to ensure accurate detection of when water reaches specific soil depths. The Raft algorithm was chosen for this purpose due to its fault tolerance and low time, network, and storage complexity. Once consensus is achieved, an irrigation event is committed and logged. Data is stored locally in PostgreSQL or MongoDB databases and exposed through a RESTful API for integration with machine learning pipelines.
+
+To foster collaboration and preserve privacy, this system employs federated learning. Each field shares only the trained model weights—not raw data—through blockchain smart contracts written in Solidity. A global model is constructed using algorithms like FedAvg, FedSGD, or FedProx, which aggregate the weights from multiple local models. These global models are published back to the blockchain so that farms can update their local models accordingly. The blockchain platform ensures transparency, decentralization, and low-latency communication while minimizing gas fees.
+
+By combining IoT, machine learning, federated learning, and blockchain technology, the Smart Irrigation System offers an efficient and scalable solution to sustainable agriculture. It empowers farmers to make informed irrigation decisions, conserve water, enhance crop yield, and contribute to the digital transformation of farming practices.
+
