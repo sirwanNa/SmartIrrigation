@@ -10,9 +10,21 @@ export class DataSetRepository extends BaseRepository<DataSet> implements IDataS
     constructor(uow: UnitOfWork) {
     super(uow, 'dataSet');
     }
-   public async getDataSetAsync():Promise<List<DataSetDTO>> {
-        const entities = await this.getAll();
-        const list = new List<DataSetDTO>(entities);    
-        return list;
-   }
+
+     private fromDTO(dto: DataSetDTO): DataSet {
+          const { id,createdDate, soilType, cropType,landSlope,month,temperature,estimated_Time } = dto;
+          return { id,createdDate, soilType, cropType,landSlope,month,temperature,estimated_Time };
+     }
+     public async getDataSetAsync():Promise<List<DataSetDTO>> {
+          const entities = await this.getAll();
+          const list = new List<DataSetDTO>(entities);    
+          return list;
+     }
+
+     public async createAsync(dataSet:DataSetDTO):Promise<boolean>{
+          const existing = await this.getById(dataSet.id);
+          if (existing) return false;
+          const entity = this.fromDTO(dataSet);
+          return await this.create(entity);
+     }
 }

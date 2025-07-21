@@ -16,6 +16,8 @@ const sensorLogController_1 = require("../controllers/sensorLogController");
 const sensorLogRepository_1 = require("../../infrastructure/repositories/sensorLogRepository");
 const sensorRepository_1 = require("../../infrastructure/repositories/sensorRepository");
 const sensorController_1 = require("../controllers/sensorController");
+const dataSetRepository_1 = require("../../infrastructure/repositories/dataSetRepository");
+const dataSetController_1 = require("../controllers/dataSetController");
 class RouteHandlers {
     constructor() {
         this.router = (0, express_1.Router)();
@@ -49,34 +51,39 @@ class RouteHandlers {
         this.irrigationLogAPIs = () => {
             const irrigationLogRepository = new irrigationLogRepository_1.IrrigationLogRepository(this.uow);
             const controller = new irrigationLogController_1.IrrigationLogController(irrigationLogRepository);
-            this.router.get('/irrigationLog/:id', controller.getIrrigationLogAsync);
-            this.router.get('/irrigationLog/getIrrigationLogsList/', controller.getIrrigationLogsListAsync);
-            this.router.post('/irrigationLog/create/', controller.createIrrigationLogAsync);
+            this.router.get('/irrigationlog/:id', controller.getIrrigationLogAsync);
+            this.router.get('/irrigationlog/getirrigationlogslist/', controller.getIrrigationLogsListAsync);
+            this.router.post('/irrigationlog/create/', controller.createIrrigationLogAsync);
         };
         this.plantGrowthAPIs = () => {
             const plantGrowthRepository = new plantGrowthRepository_1.PlantGrowthRepository(this.uow);
             const controller = new plantGrowthController_1.PlantGrowthController(plantGrowthRepository);
-            this.router.get('/plantGrowth/:id', controller.getPlantGrowthAsync);
-            this.router.get('/plantGrowth/getPlantGrowthsList/', controller.getPlantGrowthsListAsync);
-            this.router.post('/plantGrowth/create/', controller.createPlantGrowthAsync);
-            this.router.put('/plantGrowth/update/', controller.updatePlantGrowthAsync);
-            this.router.delete('/plantGrowth/delete/:id', controller.deletePlantGrowthAsync);
+            this.router.get('/plantgrowth/:id', controller.getPlantGrowthAsync);
+            this.router.get('/plantgrowth/getplantgrowthslist/', controller.getPlantGrowthsListAsync);
+            this.router.post('/plantgrowth/create/', controller.createPlantGrowthAsync);
+            this.router.put('/plantgrowth/update/', controller.updatePlantGrowthAsync);
+            this.router.delete('/plantgrowth/delete/:id', controller.deletePlantGrowthAsync);
         };
         this.sensorLogAPIs = () => {
             const sensorLogRepository = new sensorLogRepository_1.SensorLogRepository(this.uow);
             const controller = new sensorLogController_1.SensorLogController(sensorLogRepository);
-            this.router.get('/sensorLog/:id', controller.getSensorLogAsync);
-            this.router.get('/sensorLog/getSensorLogsList/', controller.getSensorLogsListAsync);
-            this.router.post('/sensorLog/create/', controller.createSensorLogAsync);
+            this.router.get('/sensorlog/:id', controller.getSensorLogAsync);
+            this.router.get('/sensorlog/getsensorlogslist/', controller.getSensorLogsListAsync);
+            this.router.post('/sensorlog/create/', controller.createSensorLogAsync);
         };
         this.sensorAPIs = () => {
             const sensorRepository = new sensorRepository_1.SensorRepository(this.uow);
             const controller = new sensorController_1.SensorController(sensorRepository);
             this.router.get('/sensor/:id', controller.getSensorAsync);
-            this.router.get('/sensor/getSensorsList/', controller.getSensorsListAsync);
+            this.router.get('/sensor/getsensorslist/', controller.getSensorsListAsync);
             this.router.post('/sensor/create/', controller.createSensorAsync);
             this.router.put('/sensor/update/', controller.updateSensorAsync);
             this.router.delete('/sensor/delete/:id', controller.deleteSensorAsync);
+        };
+        this.dataSetAPIs = () => {
+            const dataSetRepository = new dataSetRepository_1.DataSetRepository(this.uow);
+            const controller = new dataSetController_1.DataSetController(dataSetRepository);
+            this.router.get('/dataSet/getdataset', controller.getDataSetAsync);
         };
         this.mongoContext = new mongoContext_1.MongoContext();
         this.uow = new unitofWork_1.UnitOfWork(this.mongoContext);
