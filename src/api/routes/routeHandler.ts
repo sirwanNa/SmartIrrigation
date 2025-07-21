@@ -19,6 +19,9 @@ import { ISensorLogRepository } from '../../core/application/interface/repositor
 import { ISensorRepository } from '../../core/application/interface/repositories/iSensorRepository';
 import { SensorRepository } from '../../infrastructure/repositories/sensorRepository';
 import { SensorController } from '../controllers/sensorController';
+import { IDataSetRepository } from '../../core/application/interface/repositories/iDataSetRepository';
+import { DataSetRepository } from '../../infrastructure/repositories/dataSetRepository';
+import { DataSetController } from '../controllers/dataSetController';
 
 export class RouteHandlers{
     private router = Router();
@@ -92,5 +95,11 @@ export class RouteHandlers{
        this.router.put('/sensor/update/',controller.updateSensorAsync);
        this.router.delete('/sensor/delete/:id',controller.deleteSensorAsync);
 
+    }
+    dataSetAPIs=()=>{
+        const dataSetRepository: IDataSetRepository = new DataSetRepository(this.uow);
+        const controller = new DataSetController(dataSetRepository);
+
+         this.router.get('/dataSet/getDataSet', controller.getDataSetAsync);
     }
 }
