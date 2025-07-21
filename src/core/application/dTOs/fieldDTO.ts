@@ -12,4 +12,5 @@ export interface FieldDTO extends BaseModel {
   longitude: number;
   farmId?: number;
   cultivationDate:Date;
+  landSlope:number;
 }

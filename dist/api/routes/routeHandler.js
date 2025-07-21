@@ -44,7 +44,7 @@ class RouteHandlers {
             this.router.get('/field/getFieldsList/', controller.getFieldsListAsync);
             this.router.post('/field/create/', controller.createFieldAsync);
             this.router.put('/field/update/', controller.updateFieldAsync);
-            this.router.delete('/field/delete/', controller.deleteFieldAsync);
+            this.router.delete('/field/delete/:id', controller.deleteFieldAsync);
         };
         this.irrigationLogAPIs = () => {
             const irrigationLogRepository = new irrigationLogRepository_1.IrrigationLogRepository(this.uow);
@@ -60,7 +60,7 @@ class RouteHandlers {
             this.router.get('/plantGrowth/getPlantGrowthsList/', controller.getPlantGrowthsListAsync);
             this.router.post('/plantGrowth/create/', controller.createPlantGrowthAsync);
             this.router.put('/plantGrowth/update/', controller.updatePlantGrowthAsync);
-            this.router.delete('/plantGrowth/delete/', controller.deletePlantGrowthAsync);
+            this.router.delete('/plantGrowth/delete/:id', controller.deletePlantGrowthAsync);
         };
         this.sensorLogAPIs = () => {
             const sensorLogRepository = new sensorLogRepository_1.SensorLogRepository(this.uow);
@@ -76,7 +76,7 @@ class RouteHandlers {
             this.router.get('/sensor/getSensorsList/', controller.getSensorsListAsync);
             this.router.post('/sensor/create/', controller.createSensorAsync);
             this.router.put('/sensor/update/', controller.updateSensorAsync);
-            this.router.delete('/sensor/delete/', controller.deleteSensorAsync);
+            this.router.delete('/sensor/delete/:id', controller.deleteSensorAsync);
         };
         this.mongoContext = new mongoContext_1.MongoContext();
         this.uow = new unitofWork_1.UnitOfWork(this.mongoContext);

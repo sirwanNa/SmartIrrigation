@@ -10,4 +10,5 @@ export interface Field extends BaseEntity {
   longitude: number;
   farmId?: number;
   cultivationDate:Date;
+  landSlope:number;
 }

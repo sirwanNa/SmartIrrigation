@@ -12,13 +12,13 @@ export class FieldRepository extends BaseRepository<Field> implements IFieldRepo
   }
 
   private toDTO(entity: Field): FieldDTO {
-    const { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate } = entity;
-    return { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate };
+    const { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate,landSlope } = entity;
+    return { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate,landSlope };
   }
 
   private fromDTO(dto: FieldDTO): Field {
-    const { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate } = dto;
-    return { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate };
+    const { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate,landSlope } = dto;
+    return { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate,landSlope };
   }
 
   public async getFieldAsync(id: number): Promise<FieldDTO> {

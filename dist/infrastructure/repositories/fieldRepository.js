@@ -8,12 +8,12 @@ class FieldRepository extends baseRepository_1.BaseRepository {
         super(uow, 'fields');
     }
     toDTO(entity) {
-        const { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate } = entity;
-        return { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate };
+        const { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate, landSlope } = entity;
+        return { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate, landSlope };
     }
     fromDTO(dto) {
-        const { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate } = dto;
-        return { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate };
+        const { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate, landSlope } = dto;
+        return { id, name, createdDate, cropType, soilType, areaSize, latitude, longitude, farmId, cultivationDate, landSlope };
     }
     async getFieldAsync(id) {
         const entity = await this.getById(id);
