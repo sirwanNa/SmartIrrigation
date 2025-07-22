@@ -14,12 +14,12 @@ async function testFarmCommands() {
     const mongoContext = new mongoContext_1.MongoContext();
     const uow = new unitofWork_1.UnitOfWork(mongoContext);
     const farmRepository = new farmRepository_1.FarmRepository(uow);
-    const farmId = 999; // Ensure unique for testing
+    const farmId = 1026; // Ensure unique for testing
     // 1. Create a Farm
     const createFarmCommand = new createFarmCommand_1.CreateFarmCommand(farmRepository);
     createFarmCommand.farmData = {
         id: farmId,
-        name: 'Test Farm',
+        name: 'Test Farm 18',
         farmType: farmType_1.FarmType.Greenhouse,
         irrigationType: irrigationType_1.IrrigationType.Drip,
         createdDate: new Date(),

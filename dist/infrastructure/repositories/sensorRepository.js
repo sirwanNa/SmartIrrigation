@@ -3,23 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SensorRepository = void 0;
 const list_1 = require("../../share/utilities/list");
 const baseRepository_1 = require("./baseRepository");
+const mapper_1 = require("../../share/utilities/mapper");
 class SensorRepository extends baseRepository_1.BaseRepository {
     constructor(uow) {
         super(uow, 'sensors');
-    }
-    toDTO(entity) {
-        const { id, name, createdDate, sensorType, fieldId, depthCm, latitude, longitude, unit, installationDate, status } = entity;
-        return { id, name, createdDate, sensorType, fieldId, depthCm, latitude, longitude, unit, installationDate, status };
-    }
-    fromDTO(dto) {
-        const { id, name, createdDate, sensorType, fieldId, depthCm, latitude, longitude, unit, installationDate, status } = dto;
-        return { id, name, createdDate, sensorType, fieldId, depthCm, latitude, longitude, unit, installationDate, status };
     }
     async getSensorAsync(id) {
         const entity = await this.getById(id);
         if (!entity)
             throw new Error(`Sensor with ID ${id} not found`);
-        return this.toDTO(entity);
+        return mapper_1.Mapper.Map(entity);
     }
     async getSensorsListAsync() {
         const entities = await this.getAll();
@@ -30,12 +23,12 @@ class SensorRepository extends baseRepository_1.BaseRepository {
         const existing = await this.getById(sensor.id);
         if (existing)
             return false;
-        const entity = this.fromDTO(sensor);
+        const entity = mapper_1.Mapper.Map(sensor);
         return await this.create(entity);
     }
     async updateAsync(sensor) {
         await this.checkObjectIsExist(sensor.id);
-        const entity = this.fromDTO(sensor);
+        const entity = mapper_1.Mapper.Map(sensor);
         return await this.update(entity);
     }
     async removeAsync(id) {

@@ -5,25 +5,17 @@ import { BaseRepository } from './baseRepository';
 import { UnitOfWork } from '../data/unitofWork';
 import { IrrigationLog } from '../../core/domain/entities/irrigationLog';
 import { Filter } from 'mongodb';
+import { Mapper } from '../../share/utilities/mapper';
 
 export class IrrigationLogRepository extends BaseRepository<IrrigationLog> implements IIrrigationLogRepository {
     constructor(uow: UnitOfWork) {
       super(uow, 'irrigationLogs');
     }
-    private toDTO(entity: IrrigationLog): IrrigationLogDTO {
-      const { id, createdDate,fieldId, startDate,endDate } = entity;
-      return { id, createdDate,fieldId, startDate,endDate };
-    }
-  
-    private fromDTO(dto: IrrigationLogDTO): IrrigationLog {
-      const { id,createdDate,fieldId, startDate,endDate } = dto;
-      return { id, createdDate,fieldId, startDate,endDate };
-    }
 
   public async getIrrigationLogAsync(id: number): Promise<IrrigationLogDTO> {
     const entity = await this.getById(id);
-    if (!entity) throw new Error(`IrrigationLog with ID ${id} not found`);
-    return this.toDTO(entity);
+    if (!entity) throw new Error(`IrrigationLog with ID ${id} not found`);   
+     return Mapper.Map<IrrigationLog,IrrigationLogDTO>(entity);
   }
 
   public async getIrrigationLogsListAsync(fieldId:number): Promise<List<IrrigationLogDTO>> {
@@ -35,8 +27,8 @@ export class IrrigationLogRepository extends BaseRepository<IrrigationLog> imple
 
   public async createAsync(iIrrigationLog: IrrigationLogDTO): Promise<boolean> {
     const existing = await this.getById(iIrrigationLog.id);
-    if (existing) return false;
-    const entity = this.fromDTO(iIrrigationLog);
+    if (existing) return false;  
+    const entity = Mapper.Map<IrrigationLogDTO,IrrigationLog>(iIrrigationLog);
     return await this.create(entity);
   }
 

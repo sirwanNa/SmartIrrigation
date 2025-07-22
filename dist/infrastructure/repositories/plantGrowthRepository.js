@@ -3,23 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlantGrowthRepository = void 0;
 const list_1 = require("../../share/utilities/list");
 const baseRepository_1 = require("./baseRepository");
+const mapper_1 = require("../../share/utilities/mapper");
 class PlantGrowthRepository extends baseRepository_1.BaseRepository {
     constructor(uow) {
         super(uow, 'plantGrowth');
-    }
-    toDTO(entity) {
-        const { id, createdDate, fieldId, size } = entity;
-        return { id, createdDate, fieldId, size };
-    }
-    fromDTO(dto) {
-        const { id, createdDate, fieldId, size } = dto;
-        return { id, createdDate, fieldId, size };
     }
     async getPlantGrowthAsync(id) {
         const entity = await this.getById(id);
         if (!entity)
             throw new Error(`PlantGrowth with ID ${id} not found`);
-        return this.toDTO(entity);
+        return mapper_1.Mapper.Map(entity);
     }
     async getPlantGrowthListAsync(fieldId) {
         var filter = { fieldId };
@@ -31,12 +24,12 @@ class PlantGrowthRepository extends baseRepository_1.BaseRepository {
         const existing = await this.getById(plantGrowth.id);
         if (existing)
             return false;
-        const entity = this.fromDTO(plantGrowth);
+        const entity = mapper_1.Mapper.Map(plantGrowth);
         return await this.create(entity);
     }
     async updateAsync(plantGrowth) {
         await this.checkObjectIsExist(plantGrowth.id);
-        const entity = this.fromDTO(plantGrowth);
+        const entity = mapper_1.Mapper.Map(plantGrowth);
         return await this.update(entity);
     }
     async removeAsync(id) {

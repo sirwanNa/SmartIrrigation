@@ -3,23 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FarmRepository = void 0;
 const list_1 = require("../../share/utilities/list");
 const baseRepository_1 = require("./baseRepository");
+const mapper_1 = require("../../share/utilities/mapper");
 class FarmRepository extends baseRepository_1.BaseRepository {
     constructor(uow) {
         super(uow, 'farms');
-    }
-    toDTO(entity) {
-        const { id, name, createdDate, farmType, irrigationType } = entity;
-        return { id, name, createdDate, farmType, irrigationType };
-    }
-    fromDTO(dto) {
-        const { id, name, createdDate, farmType, irrigationType } = dto;
-        return { id, name, createdDate, farmType, irrigationType };
     }
     async getFarmAsync(id) {
         const entity = await this.getById(id);
         if (!entity)
             throw new Error(`Farm with ID ${id} not found`);
-        return this.toDTO(entity);
+        return mapper_1.Mapper.Map(entity);
     }
     async getFarmsListAsync() {
         const entities = await this.getAll();
@@ -30,12 +23,12 @@ class FarmRepository extends baseRepository_1.BaseRepository {
         const existing = await this.getById(farm.id);
         if (existing)
             return false;
-        const entity = this.fromDTO(farm);
+        const entity = mapper_1.Mapper.Map(farm);
         return await this.create(entity);
     }
     async updateAsync(farm) {
         await this.checkObjectIsExist(farm.id);
-        const entity = this.fromDTO(farm);
+        const entity = mapper_1.Mapper.Map(farm);
         return await this.update(entity);
     }
     async removeAsync(id) {

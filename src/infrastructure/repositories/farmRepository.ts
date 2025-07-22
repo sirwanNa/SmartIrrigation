@@ -4,26 +4,17 @@ import { List } from '../../share/utilities/list';
 import { BaseRepository } from './baseRepository';
 import { Farm } from '../../core/domain/entities/farm';
 import { UnitOfWork } from '../data/unitofWork';
+import { Mapper } from '../../share/utilities/mapper';
 
 export class FarmRepository extends BaseRepository<Farm> implements IFarmRepository {
   constructor(uow: UnitOfWork) {
     super(uow, 'farms');
   }
 
-  private toDTO(entity: Farm): FarmDTO {
-    const { id, name, createdDate,farmType,irrigationType } = entity;
-    return { id, name, createdDate,farmType,irrigationType };
-  }
-
-  private fromDTO(dto: FarmDTO): Farm {
-    const { id, name, createdDate,farmType,irrigationType } = dto;
-    return { id, name,  createdDate,farmType,irrigationType };
-  }
-
   public async getFarmAsync(id: number): Promise<FarmDTO> {
     const entity = await this.getById(id);
-    if (!entity) throw new Error(`Farm with ID ${id} not found`);
-    return this.toDTO(entity);
+    if (!entity) throw new Error(`Farm with ID ${id} not found`);   
+    return Mapper.Map<Farm,FarmDTO>(entity);
   }
 
   public async getFarmsListAsync(): Promise<List<FarmDTO>> {
@@ -34,14 +25,14 @@ export class FarmRepository extends BaseRepository<Farm> implements IFarmReposit
 
   public async createAsync(farm: FarmDTO): Promise<boolean> {
     const existing = await this.getById(farm.id);
-    if (existing) return false;
-    const entity = this.fromDTO(farm);
+    if (existing) return false;   
+    const entity = Mapper.Map<FarmDTO,Farm>(farm);
     return await this.create(entity);
   }
 
   public async updateAsync(farm: FarmDTO): Promise<boolean> {
-    await this.checkObjectIsExist(farm.id);
-    const entity = this.fromDTO(farm);
+    await this.checkObjectIsExist(farm.id);    
+    const entity = Mapper.Map<FarmDTO,Farm>(farm);
     return await this.update(entity);
   }
 

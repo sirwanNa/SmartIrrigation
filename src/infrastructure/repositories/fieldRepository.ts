@@ -5,26 +5,17 @@ import { BaseRepository } from './baseRepository';
 import { UnitOfWork } from '../data/unitofWork';
 import { Field } from '../../core/domain/entities/field';
 import { Filter } from 'mongodb';
+import { Mapper } from '../../share/utilities/mapper';
 
 export class FieldRepository extends BaseRepository<Field> implements IFieldRepository {
     constructor(uow: UnitOfWork) {
     super(uow, 'fields');
   }
 
-  private toDTO(entity: Field): FieldDTO {
-    const { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate,landSlope } = entity;
-    return { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate,landSlope };
-  }
-
-  private fromDTO(dto: FieldDTO): Field {
-    const { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate,landSlope } = dto;
-    return { id, name, createdDate,cropType,soilType,areaSize,latitude,longitude,farmId,cultivationDate,landSlope };
-  }
-
   public async getFieldAsync(id: number): Promise<FieldDTO> {
     const entity = await this.getById(id);
-    if (!entity) throw new Error(`Field with ID ${id} not found`);
-    return this.toDTO(entity);
+    if (!entity) throw new Error(`Field with ID ${id} not found`);   
+     return Mapper.Map<Field,FieldDTO>(entity);
   }
 
   public async getFieldsListAsync(farmdId:number): Promise<List<FieldDTO>> {
@@ -36,14 +27,14 @@ export class FieldRepository extends BaseRepository<Field> implements IFieldRepo
 
   public async createAsync(field: FieldDTO): Promise<boolean> {
     const existing = await this.getById(field.id);
-    if (existing) return false;
-    const entity = this.fromDTO(field);
+    if (existing) return false;    
+    const entity = Mapper.Map<FieldDTO,Field>(field);
     return await this.create(entity);
   }
 
   public async updateAsync(field: FieldDTO): Promise<boolean> {
-    await this.checkObjectIsExist(field.id);
-    const entity = this.fromDTO(field);
+    await this.checkObjectIsExist(field.id);    
+    const entity = Mapper.Map<FieldDTO,Field>(field);
     return await this.update(entity);
   }
 

@@ -4,6 +4,7 @@ import { DataSet } from "../../core/domain/entities/dataset";
 import { List } from "../../share/utilities/list";
 import { UnitOfWork } from "../data/unitofWork";
 import { BaseRepository } from "./baseRepository";
+import { Mapper } from '../../share/utilities/mapper';
 
 
 export class DataSetRepository extends BaseRepository<DataSet> implements IDataSetRepository {
@@ -11,10 +12,6 @@ export class DataSetRepository extends BaseRepository<DataSet> implements IDataS
     super(uow, 'dataSet');
     }
 
-     private fromDTO(dto: DataSetDTO): DataSet {
-          const { id,createdDate, soilType, cropType,landSlope,month,temperature,estimated_Time } = dto;
-          return { id,createdDate, soilType, cropType,landSlope,month,temperature,estimated_Time };
-     }
      public async getDataSetAsync():Promise<List<DataSetDTO>> {
           const entities = await this.getAll();
           const list = new List<DataSetDTO>(entities);    
@@ -23,8 +20,8 @@ export class DataSetRepository extends BaseRepository<DataSet> implements IDataS
 
      public async createAsync(dataSet:DataSetDTO):Promise<boolean>{
           const existing = await this.getById(dataSet.id);
-          if (existing) return false;
-          const entity = this.fromDTO(dataSet);
+          if (existing) return false;        
+          const entity = Mapper.Map<DataSetDTO,DataSet>(dataSet);
           return await this.create(entity);
      }
 }

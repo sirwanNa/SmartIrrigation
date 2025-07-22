@@ -5,26 +5,17 @@ import { BaseRepository } from './baseRepository';
 import { UnitOfWork } from '../data/unitofWork';
 import { Filter } from 'mongodb';
 import {PlantGrowth} from '../../core/domain/entities/plantGrowth'
+import { Mapper } from '../../share/utilities/mapper';
 
 export class PlantGrowthRepository extends BaseRepository<PlantGrowth> implements IPlantGrowthRepository {
   constructor(uow: UnitOfWork) {
     super(uow, 'plantGrowth');
   }
 
-  private toDTO(entity: PlantGrowth): PlantGrowthDTO {
-    const {  id,createdDate, fieldId,size } = entity;
-    return {  id,createdDate, fieldId,size };
-  }
-
-  private fromDTO(dto: PlantGrowthDTO): PlantGrowth {
-    const { id,createdDate, fieldId,size } = dto;
-    return {  id,createdDate, fieldId,size };
-  }
-
   public async getPlantGrowthAsync(id: number): Promise<PlantGrowthDTO> {
     const entity = await this.getById(id);
-    if (!entity) throw new Error(`PlantGrowth with ID ${id} not found`);
-    return this.toDTO(entity);
+    if (!entity) throw new Error(`PlantGrowth with ID ${id} not found`);   
+    return Mapper.Map<PlantGrowth,PlantGrowthDTO>(entity);
   }
 
   public async getPlantGrowthListAsync(fieldId:number): Promise<List<PlantGrowthDTO>> {
@@ -36,14 +27,14 @@ export class PlantGrowthRepository extends BaseRepository<PlantGrowth> implement
 
   public async createAsync(plantGrowth: PlantGrowthDTO): Promise<boolean> {
     const existing = await this.getById(plantGrowth.id);
-    if (existing) return false;
-    const entity = this.fromDTO(plantGrowth);
+    if (existing) return false;   
+    const entity = Mapper.Map<PlantGrowthDTO,PlantGrowth>(plantGrowth);
     return await this.create(entity);
   }
 
   public async updateAsync(plantGrowth: PlantGrowthDTO): Promise<boolean> {
-    await this.checkObjectIsExist(plantGrowth.id);
-    const entity = this.fromDTO(plantGrowth);
+    await this.checkObjectIsExist(plantGrowth.id);   
+    const entity = Mapper.Map<PlantGrowthDTO,PlantGrowth>(plantGrowth);
     return await this.update(entity);
   }
 

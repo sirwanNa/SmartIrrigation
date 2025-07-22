@@ -5,26 +5,27 @@ import { BaseRepository } from './baseRepository';
 import { UnitOfWork } from '../data/unitofWork';
 import { Filter } from 'mongodb';
 import { SensorLog } from '../../core/domain/entities/sensorLog';
+import { Mapper } from '../../share/utilities/mapper';
 
 export class SensorLogRepository extends BaseRepository<SensorLog> implements ISensorLogRepository {
  
   constructor(uow: UnitOfWork) {
     super(uow, 'sensorLogs');
   }
-    private toDTO(entity: SensorLog): SensorLogDTO {
-      const { id, createdDate,sensorId,value,batteryLevel,signalStrength } = entity;
-      return { id, createdDate,sensorId,value,batteryLevel,signalStrength  };
-    }
+    // private toDTO(entity: SensorLog): SensorLogDTO {
+    //   const { id, createdDate,sensorId,value,batteryLevel,signalStrength } = entity;
+    //   return { id, createdDate,sensorId,value,batteryLevel,signalStrength  };
+    // }
   
-    private fromDTO(dto: SensorLogDTO): SensorLog {
-      const { id, createdDate,sensorId,value,batteryLevel,signalStrength  } = dto;
-      return {id, createdDate,sensorId,value,batteryLevel,signalStrength  };
-    }
+    // private fromDTO(dto: SensorLogDTO): SensorLog {
+    //   const { id, createdDate,sensorId,value,batteryLevel,signalStrength  } = dto;
+    //   return {id, createdDate,sensorId,value,batteryLevel,signalStrength  };
+    // }
 
   public async getSensorLogAsync(id: number): Promise<SensorLogDTO> {
-    const entity = await this.getById(id);
+    const entity:SensorLog |null = await this.getById(id);
     if (!entity) throw new Error(`SensorLog with ID ${id} not found`);
-    return this.toDTO(entity);
+    return Mapper.Map<SensorLog,SensorLogDTO>(entity);
   }
 
   public async getSensorLogsListAsync(sensorId:number): Promise<List<SensorLogDTO>> {
@@ -37,7 +38,8 @@ export class SensorLogRepository extends BaseRepository<SensorLog> implements IS
   public async createAsync(sensorLog: SensorLogDTO): Promise<boolean> {
     const existing = await this.getById(sensorLog.id);
     if (existing) return false;
-    const entity = this.fromDTO(sensorLog);
+    // const entity = this.fromDTO(sensorLog);
+    const entity = Mapper.Map<SensorLog,SensorLogDTO>(sensorLog);
     return await this.create(entity);
   }
 
