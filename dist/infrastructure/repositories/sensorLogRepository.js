@@ -8,14 +8,6 @@ class SensorLogRepository extends baseRepository_1.BaseRepository {
     constructor(uow) {
         super(uow, 'sensorLogs');
     }
-    // private toDTO(entity: SensorLog): SensorLogDTO {
-    //   const { id, createdDate,sensorId,value,batteryLevel,signalStrength } = entity;
-    //   return { id, createdDate,sensorId,value,batteryLevel,signalStrength  };
-    // }
-    // private fromDTO(dto: SensorLogDTO): SensorLog {
-    //   const { id, createdDate,sensorId,value,batteryLevel,signalStrength  } = dto;
-    //   return {id, createdDate,sensorId,value,batteryLevel,signalStrength  };
-    // }
     async getSensorLogAsync(id) {
         const entity = await this.getById(id);
         if (!entity)
@@ -32,7 +24,6 @@ class SensorLogRepository extends baseRepository_1.BaseRepository {
         const existing = await this.getById(sensorLog.id);
         if (existing)
             return false;
-        // const entity = this.fromDTO(sensorLog);
         const entity = mapper_1.Mapper.Map(sensorLog);
         return await this.create(entity);
     }

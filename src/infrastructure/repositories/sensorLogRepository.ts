@@ -6,21 +6,20 @@ import { UnitOfWork } from '../data/unitofWork';
 import { Filter } from 'mongodb';
 import { SensorLog } from '../../core/domain/entities/sensorLog';
 import { Mapper } from '../../share/utilities/mapper';
+import { IrrigationLog } from '../../core/domain/entities/irrigationLog';
+import { IrrigationLogRepository } from './irrigationLogRepository';
+import { IDataSetRepository } from '../../core/application/interface/repositories/iDataSetRepository';
+import { DataSetDTO } from '../../core/application/dTOs/dataSetDTO';
+import { FieldRepository } from './fieldRepository';
 
 export class SensorLogRepository extends BaseRepository<SensorLog> implements ISensorLogRepository {
  
-  constructor(uow: UnitOfWork) {
-    super(uow, 'sensorLogs');
-  }
-    // private toDTO(entity: SensorLog): SensorLogDTO {
-    //   const { id, createdDate,sensorId,value,batteryLevel,signalStrength } = entity;
-    //   return { id, createdDate,sensorId,value,batteryLevel,signalStrength  };
-    // }
-  
-    // private fromDTO(dto: SensorLogDTO): SensorLog {
-    //   const { id, createdDate,sensorId,value,batteryLevel,signalStrength  } = dto;
-    //   return {id, createdDate,sensorId,value,batteryLevel,signalStrength  };
-    // }
+  constructor(uow: UnitOfWork,
+    private readonly irrigationLog:IrrigationLogRepository,
+    private readonly dataSetRepository:IDataSetRepository,
+    private readonly fieldRepository:FieldRepository){
+      super(uow, 'sensorLogs');
+    }
 
   public async getSensorLogAsync(id: number): Promise<SensorLogDTO> {
     const entity:SensorLog |null = await this.getById(id);
@@ -37,10 +36,32 @@ export class SensorLogRepository extends BaseRepository<SensorLog> implements IS
 
   public async createAsync(sensorLog: SensorLogDTO): Promise<boolean> {
     const existing = await this.getById(sensorLog.id);
-    if (existing) return false;
-    // const entity = this.fromDTO(sensorLog);
-    const entity = Mapper.Map<SensorLog,SensorLogDTO>(sensorLog);
-    return await this.create(entity);
+    if (existing) return false;  
+
+    let lastIrrigation:IrrigationLog=(await this.irrigationLog.getAll()).filter((row:IrrigationLog,index:number)=>row.endDate !== undefined)
+      .sort((a, b) => {
+        return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+      })[0];
+      if(lastIrrigation !== undefined){
+        const entity = Mapper.Map<SensorLog,SensorLogDTO>(sensorLog);
+        await this.uow.start()
+        let sensorLogCreated:boolean = await this.create(entity);
+        let dataSet:DataSetDTO = {
+          id:1,
+          createdDate : new Date(),
+          soilType:,
+          cropType:,
+          landSlope:,
+          month:,
+          temperature:,
+          estimated_Time:,
+        };
+        let dataSetCreated:boolean = await this.dataSetRepository.createAsync(dataSet)
+        this.uow.complete();
+        return sensorLogCreated && dataSetCreated;
+      }
+      return false;
+
   }
 
 }
