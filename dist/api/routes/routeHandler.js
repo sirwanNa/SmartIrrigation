@@ -68,7 +68,7 @@ class RouteHandlers {
             const sensorLogRepository = new sensorLogRepository_1.SensorLogRepository(this.uow);
             const controller = new sensorLogController_1.SensorLogController(sensorLogRepository);
             this.router.get('/sensorlog/:id', controller.getSensorLogAsync);
-            this.router.get('/sensorlog/getsensorlogslist/', controller.getSensorLogsListAsync);
+            this.router.get('/sensorlog/getsensorlogslist/:fieldId', controller.getSensorLogsListAsync);
             this.router.post('/sensorlog/create/', controller.createSensorLogAsync);
         };
         this.sensorAPIs = () => {

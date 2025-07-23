@@ -14,8 +14,8 @@ class SensorRepository extends baseRepository_1.BaseRepository {
             throw new Error(`Sensor with ID ${id} not found`);
         return mapper_1.Mapper.Map(entity);
     }
-    async getSensorsListAsync() {
-        const entities = await this.getAll();
+    async getSensorsListAsync(fieldId) {
+        const entities = await this.getAll({ fieldId });
         const list = new list_1.List(entities);
         return list;
     }

@@ -2,11 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetSensorsListCommand = void 0;
 class GetSensorsListCommand {
-    constructor(sensorRepository) {
-        this._sensorRepository = sensorRepository;
+    constructor(sensorRepository, fieldId) {
+        this.sensorRepository = sensorRepository;
+        this.fieldId = fieldId;
     }
     executeAsync() {
-        return this._sensorRepository.getSensorsListAsync();
+        return this.sensorRepository.getSensorsListAsync(this.fieldId);
     }
 }
 exports.GetSensorsListCommand = GetSensorsListCommand;

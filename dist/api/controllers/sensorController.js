@@ -11,13 +11,13 @@ class SensorController {
         this._SensorRepository = _SensorRepository;
         this.getSensorAsync = async (req, res) => {
             try {
-                const SensorId = parseInt(req.params.id, 10);
-                if (isNaN(SensorId)) {
+                const sensorId = parseInt(req.params.id, 10);
+                if (isNaN(sensorId)) {
                     res.status(400).json({ message: 'Invalid Sensor ID' });
                     return;
                 }
                 const command = new getSensorCommand_1.GetSensorCommand(this._SensorRepository);
-                command.sensorId = SensorId;
+                command.sensorId = sensorId;
                 const result = await command.executeAsync();
                 if (!result) {
                     res.status(404).json({ message: 'Sensor not found' });
@@ -32,7 +32,8 @@ class SensorController {
         };
         this.getSensorsListAsync = async (req, res) => {
             try {
-                const command = new getSensorsListCommand_1.GetSensorsListCommand(this._SensorRepository);
+                const fieldId = parseInt(req.params.id, 10);
+                const command = new getSensorsListCommand_1.GetSensorsListCommand(this._SensorRepository, fieldId);
                 const result = await command.executeAsync();
                 res.status(200).json(result);
             }

@@ -3,12 +3,10 @@ import {ISensorRepository} from '../../interface/repositories/iSensorRepository'
 import {SensorDTO} from '../../dTOs/sensorDTO'
 import {List} from '../../../../share/utilities/list'
 
- export class GetSensorsListCommand implements ICommand{
-    private  _sensorRepository:ISensorRepository;   
-    constructor(sensorRepository:ISensorRepository){
-        this._sensorRepository = sensorRepository
+ export class GetSensorsListCommand implements ICommand{    
+    constructor(private sensorRepository:ISensorRepository,private fieldId:number){       
     }
     public executeAsync(): Promise<List<SensorDTO>> {
-        return this._sensorRepository.getSensorsListAsync();             
+        return this.sensorRepository.getSensorsListAsync(this.fieldId);             
     }
  }

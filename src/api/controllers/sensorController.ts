@@ -13,14 +13,14 @@ export class SensorController {
 
   public getSensorAsync = async (req: Request, res: Response): Promise<void> => {
     try {
-      const SensorId:number = parseInt(req.params.id, 10);
-      if (isNaN(SensorId)) {
+      const sensorId:number = parseInt(req.params.id, 10);
+      if (isNaN(sensorId)) {
         res.status(400).json({ message: 'Invalid Sensor ID' });
         return;
       }
 
       const command = new GetSensorCommand(this._SensorRepository);
-      command.sensorId = SensorId;
+      command.sensorId = sensorId;
       const result: SensorDTO = await command.executeAsync();
 
       if (!result) {
@@ -37,7 +37,8 @@ export class SensorController {
 
   public getSensorsListAsync = async (req: Request, res: Response): Promise<void> => {
     try {
-      const command = new GetSensorsListCommand(this._SensorRepository);
+      const fieldId:number = parseInt(req.params.id, 10);
+      const command = new GetSensorsListCommand(this._SensorRepository,fieldId);
       const result: List<SensorDTO> = await command.executeAsync();
       res.status(200).json(result);
     } catch (error) {

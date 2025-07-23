@@ -5,6 +5,7 @@ import { BaseRepository } from './baseRepository';
 import { UnitOfWork } from '../data/unitofWork';
 import { Sensor } from '../../core/domain/entities/sensor';
 import { Mapper } from '../../share/utilities/mapper';
+import { Filter } from 'mongodb';
 
 export class SensorRepository extends BaseRepository<Sensor> implements ISensorRepository {
 
@@ -19,8 +20,8 @@ export class SensorRepository extends BaseRepository<Sensor> implements ISensorR
      return Mapper.Map<Sensor,SensorDTO>(entity);
   }
 
-  public async getSensorsListAsync(): Promise<List<SensorDTO>> {    
-    const entities = await this.getAll();
+  public async getSensorsListAsync(fieldId:number): Promise<List<SensorDTO>> {    
+    const entities = await this.getAll({fieldId} as Filter<Sensor>);
     const list = new List<SensorDTO>(entities);    
     return list;
   }
