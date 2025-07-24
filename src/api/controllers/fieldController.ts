@@ -7,9 +7,10 @@ import { DeleteFieldCommand } from '../../core/application/commands/field/delete
 import { IFieldRepository } from '../../core/application/interface/repositories/iFieldRepository';
 import { List } from '../../share/utilities/list';
 import { FieldDTO } from '../../core/application/dTOs/fieldDTO';
+import { UnitOfWork } from '../../infrastructure/data/unitofWork';
 
 export class FieldController {
-  constructor(private readonly _fieldRepository: IFieldRepository) {}
+  constructor(private readonly uow:UnitOfWork,private readonly _fieldRepository: IFieldRepository) {}
 
   public getFieldAsync = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -50,7 +51,7 @@ export class FieldController {
   public createFieldAsync = async (req: Request, res: Response): Promise<void> => {
     try {
       const FieldData: FieldDTO = req.body;
-      const command = new CreateFieldCommand(this._fieldRepository);
+      const command = new CreateFieldCommand(this.uow,this._fieldRepository);
       command.fieldData = FieldData;
       const createdField: boolean = await command.executeAsync();
       res.status(201).json(createdField);
@@ -64,7 +65,7 @@ export class FieldController {
     try {
 
       const FieldData: FieldDTO = req.body;     
-      const command = new UpdateFieldCommand(this._fieldRepository);
+      const command = new UpdateFieldCommand(this.uow, this._fieldRepository);
       command.fieldData = FieldData;
       const updatedField: boolean = await command.executeAsync();
       res.status(200).json(updatedField);
@@ -81,7 +82,7 @@ export class FieldController {
         res.status(400).json({ message: 'Invalid Field ID' });
         return;
       }
-      const command = new DeleteFieldCommand(this._fieldRepository);
+      const command = new DeleteFieldCommand(this.uow,this._fieldRepository);
       command.fieldId = FieldId;
       const deleted:boolean = await command.executeAsync();
       res.status(204).json(deleted);

@@ -1,19 +1,22 @@
 import { ICommand } from '../iCommand';
 import { IDataSetRepository } from '../../interface/repositories/iDataSetRepository';
 import { DataSetDTO } from '../../dTOs/dataSetDTO';
+import { IUnitOfWork } from '../../../../infrastructure/data/iunitofWork';
 
 export class CreateDataSetCommand implements ICommand {
-  private _dataSetRepository: IDataSetRepository;
   public dataSetData?: DataSetDTO;
 
-  constructor(DataSetRepository: IDataSetRepository) {
-    this._dataSetRepository = DataSetRepository;
+  constructor(private readonly uow:IUnitOfWork,private dataSetRepository: IDataSetRepository) {
+    
   }
 
   public async executeAsync(): Promise<boolean> {
     if (!this.dataSetData) {
       throw new Error('DataSet data is undefined');
     }
-    return await this._dataSetRepository.createAsync(this.dataSetData);
+    this.uow.start();
+    let result:boolean = await this.dataSetRepository.createAsync(this.dataSetData);
+    this.uow.complete();   
+    return result; 
   }
 }

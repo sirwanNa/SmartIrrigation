@@ -2,13 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeleteFarmCommand = void 0;
 class DeleteFarmCommand {
-    constructor(farmRepository) {
-        this._farmRepository = farmRepository;
+    constructor(uow, farmRepository) {
+        this.uow = uow;
+        this.farmRepository = farmRepository;
     }
-    executeAsync() {
+    async executeAsync() {
         if (this.FarmId === undefined)
             throw new Error('Id is undefined');
-        return this._farmRepository.removeAsync(this.FarmId);
+        this.uow.start();
+        let result = await this.farmRepository.removeAsync(this.FarmId);
+        this.uow.complete();
+        return result;
     }
 }
 exports.DeleteFarmCommand = DeleteFarmCommand;

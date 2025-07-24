@@ -1,14 +1,17 @@
 import {ICommand} from '../iCommand'
 import {IFieldRepository} from '../../interface/repositories/iFieldRepository'
+import { IUnitOfWork } from '../../../../infrastructure/data/iunitofWork';
 
- export class DeleteFieldCommand implements ICommand{
-    private  _fieldRepository:IFieldRepository;
+ export class DeleteFieldCommand implements ICommand{ 
     public fieldId?:number;
-    constructor(fieldRepository:IFieldRepository){
-        this._fieldRepository = fieldRepository
+    constructor(private readonly uow:IUnitOfWork,private fieldRepository:IFieldRepository){
+       
     }
-    public executeAsync(): Promise<boolean> {
+    public async executeAsync(): Promise<boolean> {
         if(this.fieldId === undefined) throw new Error('Id is undefined');
-        return this._fieldRepository.removeAsync(this.fieldId);             
+        this.uow.start();
+        let result:boolean = await this.fieldRepository.removeAsync(this.fieldId); 
+        this.uow.complete();   
+        return result;             
     }
  }

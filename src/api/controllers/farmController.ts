@@ -7,9 +7,10 @@ import { DeleteFarmCommand } from '../../core/application/commands/farm/deleteFa
 import { IFarmRepository } from '../../core/application/interface/repositories/iFarmRepository';
 import { List } from '../../share/utilities/list';
 import { FarmDTO } from '../../core/application/dTOs/farmDTO';
+import { UnitOfWork } from '../../infrastructure/data/unitofWork';
 
 export class FarmController {
-  constructor(private readonly _farmRepository: IFarmRepository) {}
+  constructor(private readonly uow:UnitOfWork,private readonly _farmRepository: IFarmRepository) {}
 
   public getFarmAsync = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -49,7 +50,7 @@ export class FarmController {
   public createFarmAsync = async (req: Request, res: Response): Promise<void> => {
     try {      
       const farmData: FarmDTO = req.body;
-      const command = new CreateFarmCommand(this._farmRepository);
+      const command = new CreateFarmCommand(this.uow,this._farmRepository);
       command.farmData = farmData;
       const createdFarm: boolean = await command.executeAsync();
       res.status(201).json(createdFarm);
@@ -63,7 +64,7 @@ export class FarmController {
     try {
 
       const farmData: FarmDTO = req.body;     
-      const command = new UpdateFarmCommand(this._farmRepository);
+      const command = new UpdateFarmCommand(this.uow,this._farmRepository);
       command.farmData = farmData;
       const updatedFarm: boolean = await command.executeAsync();
       res.status(200).json(updatedFarm);
@@ -80,7 +81,7 @@ export class FarmController {
         res.status(400).json({ message: 'Invalid farm ID' });
         return;
       }
-      const command = new DeleteFarmCommand(this._farmRepository);
+      const command = new DeleteFarmCommand(this.uow,this._farmRepository);
       command.FarmId = farmId;
       const deleted:boolean = await command.executeAsync();
       res.status(204).json(deleted);

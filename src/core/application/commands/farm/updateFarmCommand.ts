@@ -1,19 +1,23 @@
 import { ICommand } from '../iCommand';
 import { IFarmRepository } from '../../interface/repositories/iFarmRepository';
 import { FarmDTO } from '../../dTOs/farmDTO';
+import { IUnitOfWork } from '../../../../infrastructure/data/iunitofWork';
 
 export class UpdateFarmCommand implements ICommand {
-  private _farmRepository: IFarmRepository;
+  
   public farmData?: FarmDTO;
 
-  constructor(farmRepository: IFarmRepository) {
-    this._farmRepository = farmRepository;
+  constructor(private readonly uow:IUnitOfWork,private readonly farmRepository: IFarmRepository) {
+    
   }
 
   public async executeAsync(): Promise<boolean> {
     if (!this.farmData) {
       throw new Error('Farm data is undefined');
     }
-    return await this._farmRepository.updateAsync(this.farmData);
+     this.uow.start();
+     let result:boolean = await this.farmRepository.updateAsync(this.farmData);
+     this.uow.complete();   
+     return result; 
   }
 }

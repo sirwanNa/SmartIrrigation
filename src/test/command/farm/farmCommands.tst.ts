@@ -21,7 +21,7 @@ async function testFarmCommands() {
   const farmId = 1026; // Ensure unique for testing
 
   // 1. Create a Farm
-  const createFarmCommand = new CreateFarmCommand(farmRepository);
+  const createFarmCommand = new CreateFarmCommand(uow,farmRepository);
   createFarmCommand.farmData = {
     id: farmId,
     name: 'Test Farm 18',
@@ -45,7 +45,7 @@ async function testFarmCommands() {
   console.log('Get Farm by ID:', singleFarm);
 
   // 4. Update Farm
-  const updateFarmCommand = new UpdateFarmCommand(farmRepository);
+  const updateFarmCommand = new UpdateFarmCommand(uow,farmRepository);
   updateFarmCommand.farmData = {
     ...singleFarm,
     name: 'Updated Test Farm',
@@ -54,7 +54,7 @@ async function testFarmCommands() {
   console.log('Update Farm Result:', updated);
 
   // 5. Delete Farm
-  const deleteFarmCommand = new DeleteFarmCommand(farmRepository);
+  const deleteFarmCommand = new DeleteFarmCommand(uow,farmRepository);
   deleteFarmCommand.FarmId = farmId;
   const deleted: boolean = await deleteFarmCommand.executeAsync();
   console.log('Delete Farm Result:', deleted);

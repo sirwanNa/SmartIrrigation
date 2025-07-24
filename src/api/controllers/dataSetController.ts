@@ -4,10 +4,11 @@ import { DataSetDTO } from "../../core/application/dTOs/dataSetDTO";
 import { IDataSetRepository } from "../../core/application/interface/repositories/iDataSetRepository";
 import { List } from "../../share/utilities/list";
 import { CreateDataSetCommand } from '../../core/application/commands/dataSet/createDataSetCommand';
+import { UnitOfWork } from '../../infrastructure/data/unitofWork';
 
 
 export class DataSetController{
-    constructor(private readonly _dataSetRepository:IDataSetRepository){
+    constructor(private readonly uow:UnitOfWork,private readonly _dataSetRepository:IDataSetRepository){
 
     }
 
@@ -25,7 +26,7 @@ export class DataSetController{
     public insertAsync = async (req: Request, res: Response): Promise<void> => {
         try {      
             const farmData: DataSetDTO = req.body;
-            const command = new CreateDataSetCommand(this._dataSetRepository);
+            const command = new CreateDataSetCommand(this.uow,this._dataSetRepository);
             command.dataSetData = farmData;
             const createdFarm: boolean = await command.executeAsync();
             res.status(201).json(createdFarm);

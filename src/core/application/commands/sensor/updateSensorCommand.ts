@@ -16,7 +16,7 @@ export class UpdateSensorCommand implements ICommand {
       throw new Error('Sensor data is undefined');
     }
     this.uow.start();
-    let result:boolean= await this.sensorRepository.updateAsync(this.sensorData);
+    let result:boolean = await this.sensorRepository.updateAsync(this.sensorData);
     this.uow.complete();   
     return result;  
   }

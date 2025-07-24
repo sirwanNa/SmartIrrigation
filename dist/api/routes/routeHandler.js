@@ -32,7 +32,7 @@ class RouteHandlers {
         };
         this.farmAPIs = () => {
             const farmRepository = new farmRepository_1.FarmRepository(this.mongoContext);
-            const controller = new farmController_1.FarmController(farmRepository);
+            const controller = new farmController_1.FarmController(this.uow, farmRepository);
             this.router.get('/farm/getfarm/:id', controller.getFarmAsync);
             this.router.get('/farm/getfarmsList/', controller.getFarmsListAsync);
             this.router.post('/farm/create/', controller.createFarmAsync);
@@ -41,7 +41,7 @@ class RouteHandlers {
         };
         this.fieldAPIs = () => {
             const fieldRepository = new fieldRepository_1.FieldRepository(this.mongoContext);
-            const controller = new fieldController_1.FieldController(fieldRepository);
+            const controller = new fieldController_1.FieldController(this.uow, fieldRepository);
             this.router.get('/field/:id', controller.getFieldAsync);
             this.router.get('/field/getFieldsList/', controller.getFieldsListAsync);
             this.router.post('/field/create/', controller.createFieldAsync);
@@ -86,7 +86,7 @@ class RouteHandlers {
         };
         this.dataSetAPIs = () => {
             const dataSetRepository = new dataSetRepository_1.DataSetRepository(this.mongoContext);
-            const controller = new dataSetController_1.DataSetController(dataSetRepository);
+            const controller = new dataSetController_1.DataSetController(this.uow, dataSetRepository);
             this.router.get('/dataSet/getdataset', controller.getDataSetAsync);
         };
         this.mongoContext = new mongoContext_1.MongoContext();

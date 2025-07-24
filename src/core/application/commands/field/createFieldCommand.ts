@@ -1,19 +1,22 @@
 import { ICommand } from '../iCommand';
 import { IFieldRepository } from '../../interface/repositories/iFieldRepository';
 import { FieldDTO } from '../../dTOs/fieldDTO';
+import { IUnitOfWork } from '../../../../infrastructure/data/iunitofWork';
 
-export class CreateFieldCommand implements ICommand {
-  private _fieldRepository: IFieldRepository;
+export class CreateFieldCommand implements ICommand { 
   public fieldData?: FieldDTO;
 
-  constructor(fieldRepository: IFieldRepository) {
-    this._fieldRepository = fieldRepository;
+  constructor(private readonly uow:IUnitOfWork,private readonly fieldRepository: IFieldRepository) {
+    
   }
 
   public async executeAsync(): Promise<boolean> {
     if (!this.fieldData) {
       throw new Error('Field data is undefined');
     }
-    return await this._fieldRepository.createAsync(this.fieldData);
+    this.uow.start();
+    let result:boolean = await this.fieldRepository.createAsync(this.fieldData);
+    this.uow.complete();   
+    return result; 
   }
 }

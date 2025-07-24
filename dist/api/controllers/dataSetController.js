@@ -4,7 +4,8 @@ exports.DataSetController = void 0;
 const getDataSetCommand_1 = require("../../core/application/commands/dataSet/getDataSetCommand");
 const createDataSetCommand_1 = require("../../core/application/commands/dataSet/createDataSetCommand");
 class DataSetController {
-    constructor(_dataSetRepository) {
+    constructor(uow, _dataSetRepository) {
+        this.uow = uow;
         this._dataSetRepository = _dataSetRepository;
         this.getDataSetAsync = async (req, res) => {
             try {
@@ -20,7 +21,7 @@ class DataSetController {
         this.insertAsync = async (req, res) => {
             try {
                 const farmData = req.body;
-                const command = new createDataSetCommand_1.CreateDataSetCommand(this._dataSetRepository);
+                const command = new createDataSetCommand_1.CreateDataSetCommand(this.uow, this._dataSetRepository);
                 command.dataSetData = farmData;
                 const createdFarm = await command.executeAsync();
                 res.status(201).json(createdFarm);

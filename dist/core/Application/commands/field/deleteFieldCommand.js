@@ -2,13 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeleteFieldCommand = void 0;
 class DeleteFieldCommand {
-    constructor(fieldRepository) {
-        this._fieldRepository = fieldRepository;
+    constructor(uow, fieldRepository) {
+        this.uow = uow;
+        this.fieldRepository = fieldRepository;
     }
-    executeAsync() {
+    async executeAsync() {
         if (this.fieldId === undefined)
             throw new Error('Id is undefined');
-        return this._fieldRepository.removeAsync(this.fieldId);
+        this.uow.start();
+        let result = await this.fieldRepository.removeAsync(this.fieldId);
+        this.uow.complete();
+        return result;
     }
 }
 exports.DeleteFieldCommand = DeleteFieldCommand;

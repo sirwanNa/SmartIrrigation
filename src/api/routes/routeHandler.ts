@@ -42,7 +42,7 @@ export class RouteHandlers{
     }
     farmAPIs=()=>{
         const farmRepository: IFarmRepository = new FarmRepository(this.mongoContext);
-        const controller = new FarmController(farmRepository);
+        const controller = new FarmController(this.uow,farmRepository);
 
         this.router.get('/farm/getfarm/:id', controller.getFarmAsync);
         this.router.get('/farm/getfarmsList/',controller.getFarmsListAsync);
@@ -52,7 +52,7 @@ export class RouteHandlers{
     }
     fieldAPIs =()=>{
         const fieldRepository: IFieldRepository = new FieldRepository(this.mongoContext);
-        const controller = new FieldController(fieldRepository);
+        const controller = new FieldController(this.uow,fieldRepository);
         
         this.router.get('/field/:id', controller.getFieldAsync);
         this.router.get('/field/getFieldsList/',controller.getFieldsListAsync);
@@ -103,7 +103,7 @@ export class RouteHandlers{
     }
     dataSetAPIs=()=>{
         const dataSetRepository: IDataSetRepository = new DataSetRepository(this.mongoContext);
-        const controller = new DataSetController(dataSetRepository);
+        const controller = new DataSetController(this.uow, dataSetRepository);
 
          this.router.get('/dataSet/getdataset', controller.getDataSetAsync);
     }

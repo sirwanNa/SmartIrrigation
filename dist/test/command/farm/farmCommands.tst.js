@@ -16,7 +16,7 @@ async function testFarmCommands() {
     const farmRepository = new farmRepository_1.FarmRepository(mongoContext);
     const farmId = 1026; // Ensure unique for testing
     // 1. Create a Farm
-    const createFarmCommand = new createFarmCommand_1.CreateFarmCommand(farmRepository);
+    const createFarmCommand = new createFarmCommand_1.CreateFarmCommand(uow, farmRepository);
     createFarmCommand.farmData = {
         id: farmId,
         name: 'Test Farm 18',
@@ -36,7 +36,7 @@ async function testFarmCommands() {
     const singleFarm = await getFarmCommand.executeAsync();
     console.log('Get Farm by ID:', singleFarm);
     // 4. Update Farm
-    const updateFarmCommand = new updateFarmCommand_1.UpdateFarmCommand(farmRepository);
+    const updateFarmCommand = new updateFarmCommand_1.UpdateFarmCommand(uow, farmRepository);
     updateFarmCommand.farmData = {
         ...singleFarm,
         name: 'Updated Test Farm',
@@ -44,7 +44,7 @@ async function testFarmCommands() {
     const updated = await updateFarmCommand.executeAsync();
     console.log('Update Farm Result:', updated);
     // 5. Delete Farm
-    const deleteFarmCommand = new deleteFarmCommand_1.DeleteFarmCommand(farmRepository);
+    const deleteFarmCommand = new deleteFarmCommand_1.DeleteFarmCommand(uow, farmRepository);
     deleteFarmCommand.FarmId = farmId;
     const deleted = await deleteFarmCommand.executeAsync();
     console.log('Delete Farm Result:', deleted);
