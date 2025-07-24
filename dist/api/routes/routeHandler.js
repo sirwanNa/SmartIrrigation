@@ -77,7 +77,7 @@ class RouteHandlers {
         };
         this.sensorAPIs = () => {
             const sensorRepository = new sensorRepository_1.SensorRepository(this.mongoContext);
-            const controller = new sensorController_1.SensorController(sensorRepository);
+            const controller = new sensorController_1.SensorController(this.uow, sensorRepository);
             this.router.get('/sensor/:id', controller.getSensorAsync);
             this.router.get('/sensor/getsensorslist/', controller.getSensorsListAsync);
             this.router.post('/sensor/create/', controller.createSensorAsync);

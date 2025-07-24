@@ -2,13 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeleteSensorCommand = void 0;
 class DeleteSensorCommand {
-    constructor(sensorRepository) {
-        this._sensorRepository = sensorRepository;
+    constructor(uow, sensorRepository) {
+        this.uow = uow;
+        this.sensorRepository = sensorRepository;
     }
-    executeAsync() {
+    async executeAsync() {
         if (this.sensorId === undefined)
             throw new Error('Id is undefined');
-        return this._sensorRepository.removeAsync(this.sensorId);
+        this.uow.start();
+        let result = await this.sensorRepository.removeAsync(this.sensorId);
+        this.uow.complete();
+        return result;
     }
 }
 exports.DeleteSensorCommand = DeleteSensorCommand;

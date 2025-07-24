@@ -7,8 +7,9 @@ const createSensorCommand_1 = require("../../core/application/commands/sensor/cr
 const updateSensorCommand_1 = require("../../core/application/commands/sensor/updateSensorCommand");
 const deleteSensorCommand_1 = require("../../core/application/commands/sensor/deleteSensorCommand");
 class SensorController {
-    constructor(_SensorRepository) {
-        this._SensorRepository = _SensorRepository;
+    constructor(uow, _sensorRepository) {
+        this.uow = uow;
+        this._sensorRepository = _sensorRepository;
         this.getSensorAsync = async (req, res) => {
             try {
                 const sensorId = parseInt(req.params.id, 10);
@@ -16,7 +17,7 @@ class SensorController {
                     res.status(400).json({ message: 'Invalid Sensor ID' });
                     return;
                 }
-                const command = new getSensorCommand_1.GetSensorCommand(this._SensorRepository);
+                const command = new getSensorCommand_1.GetSensorCommand(this._sensorRepository);
                 command.sensorId = sensorId;
                 const result = await command.executeAsync();
                 if (!result) {
@@ -33,7 +34,7 @@ class SensorController {
         this.getSensorsListAsync = async (req, res) => {
             try {
                 const fieldId = parseInt(req.params.id, 10);
-                const command = new getSensorsListCommand_1.GetSensorsListCommand(this._SensorRepository, fieldId);
+                const command = new getSensorsListCommand_1.GetSensorsListCommand(this._sensorRepository, fieldId);
                 const result = await command.executeAsync();
                 res.status(200).json(result);
             }
@@ -45,7 +46,7 @@ class SensorController {
         this.createSensorAsync = async (req, res) => {
             try {
                 const SensorData = req.body;
-                const command = new createSensorCommand_1.CreateSensorCommand(this._SensorRepository);
+                const command = new createSensorCommand_1.CreateSensorCommand(this.uow, this._sensorRepository);
                 command.sensorData = SensorData;
                 const createdSensor = await command.executeAsync();
                 res.status(201).json(createdSensor);
@@ -58,7 +59,7 @@ class SensorController {
         this.updateSensorAsync = async (req, res) => {
             try {
                 const SensorData = req.body;
-                const command = new updateSensorCommand_1.UpdateSensorCommand(this._SensorRepository);
+                const command = new updateSensorCommand_1.UpdateSensorCommand(this.uow, this._sensorRepository);
                 command.sensorData = SensorData;
                 const updatedSensor = await command.executeAsync();
                 res.status(200).json(updatedSensor);
@@ -75,7 +76,7 @@ class SensorController {
                     res.status(400).json({ message: 'Invalid Sensor ID' });
                     return;
                 }
-                const command = new deleteSensorCommand_1.DeleteSensorCommand(this._SensorRepository);
+                const command = new deleteSensorCommand_1.DeleteSensorCommand(this.uow, this._sensorRepository);
                 command.sensorId = SensorId;
                 const deleted = await command.executeAsync();
                 res.status(204).json(deleted);

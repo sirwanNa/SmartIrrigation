@@ -1,14 +1,17 @@
 import {ICommand} from '../iCommand'
 import {ISensorRepository} from '../../interface/repositories/iSensorRepository'
+import { IUnitOfWork } from '../../../../infrastructure/data/iunitofWork';
 
- export class DeleteSensorCommand implements ICommand{
-    private  _sensorRepository:ISensorRepository;
+ export class DeleteSensorCommand implements ICommand{    
     public sensorId?:number;
-    constructor(sensorRepository:ISensorRepository){
-        this._sensorRepository = sensorRepository
+    constructor(private readonly uow:IUnitOfWork,private readonly sensorRepository:ISensorRepository){
+        
     }
-    public executeAsync(): Promise<boolean> {
+    public async executeAsync(): Promise<boolean> {
         if(this.sensorId === undefined) throw new Error('Id is undefined');
-        return this._sensorRepository.removeAsync(this.sensorId);             
+        this.uow.start();
+        let result:boolean = await this.sensorRepository.removeAsync(this.sensorId);  
+        this.uow.complete();   
+        return result;        
     }
  }

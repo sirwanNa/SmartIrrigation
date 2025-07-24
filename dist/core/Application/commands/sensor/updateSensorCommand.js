@@ -2,14 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateSensorCommand = void 0;
 class UpdateSensorCommand {
-    constructor(SensorRepository) {
-        this._sensorRepository = SensorRepository;
+    constructor(uow, sensorRepository) {
+        this.uow = uow;
+        this.sensorRepository = sensorRepository;
     }
     async executeAsync() {
         if (!this.sensorData) {
             throw new Error('Sensor data is undefined');
         }
-        return await this._sensorRepository.updateAsync(this.sensorData);
+        this.uow.start();
+        let result = await this.sensorRepository.updateAsync(this.sensorData);
+        this.uow.complete();
+        return result;
     }
 }
 exports.UpdateSensorCommand = UpdateSensorCommand;
