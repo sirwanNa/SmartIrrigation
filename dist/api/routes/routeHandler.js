@@ -50,14 +50,14 @@ class RouteHandlers {
         };
         this.irrigationLogAPIs = () => {
             const irrigationLogRepository = new irrigationLogRepository_1.IrrigationLogRepository(this.mongoContext);
-            const controller = new irrigationLogController_1.IrrigationLogController(irrigationLogRepository);
+            const controller = new irrigationLogController_1.IrrigationLogController(this.uow, irrigationLogRepository);
             this.router.get('/irrigationlog/:id', controller.getIrrigationLogAsync);
             this.router.get('/irrigationlog/getirrigationlogslist/', controller.getIrrigationLogsListAsync);
             this.router.post('/irrigationlog/create/', controller.createIrrigationLogAsync);
         };
         this.plantGrowthAPIs = () => {
             const plantGrowthRepository = new plantGrowthRepository_1.PlantGrowthRepository(this.mongoContext);
-            const controller = new plantGrowthController_1.PlantGrowthController(plantGrowthRepository);
+            const controller = new plantGrowthController_1.PlantGrowthController(this.uow, plantGrowthRepository);
             this.router.get('/plantgrowth/:id', controller.getPlantGrowthAsync);
             this.router.get('/plantgrowth/getplantgrowthslist/', controller.getPlantGrowthsListAsync);
             this.router.post('/plantgrowth/create/', controller.createPlantGrowthAsync);

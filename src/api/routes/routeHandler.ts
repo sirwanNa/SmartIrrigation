@@ -62,7 +62,7 @@ export class RouteHandlers{
     }
     irrigationLogAPIs = ()=>{
         const irrigationLogRepository: IIrrigationLogRepository = new IrrigationLogRepository(this.mongoContext);
-        const controller = new IrrigationLogController(irrigationLogRepository);
+        const controller = new IrrigationLogController(this.uow,irrigationLogRepository);
         
         this.router.get('/irrigationlog/:id', controller.getIrrigationLogAsync);
         this.router.get('/irrigationlog/getirrigationlogslist/',controller.getIrrigationLogsListAsync);
@@ -70,7 +70,7 @@ export class RouteHandlers{
     }
     plantGrowthAPIs =()=>{
         const plantGrowthRepository: IPlantGrowthRepository = new PlantGrowthRepository(this.mongoContext);
-        const controller = new PlantGrowthController(plantGrowthRepository);
+        const controller = new PlantGrowthController(this.uow,plantGrowthRepository);
         this.router.get('/plantgrowth/:id', controller.getPlantGrowthAsync);
         this.router.get('/plantgrowth/getplantgrowthslist/',controller.getPlantGrowthsListAsync);
         this.router.post('/plantgrowth/create/',controller.createPlantGrowthAsync);

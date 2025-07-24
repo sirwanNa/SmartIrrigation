@@ -5,7 +5,8 @@ const getIrrigationLogCommand_1 = require("../../core/application/commands/irrig
 const getIrrigationLogsListCommand_1 = require("../../core/application/commands/irrigationLog/getIrrigationLogsListCommand");
 const createIrrigationLogCommand_1 = require("../../core/application/commands/irrigationLog/createIrrigationLogCommand");
 class IrrigationLogController {
-    constructor(_IrrigationLogRepository) {
+    constructor(uow, _IrrigationLogRepository) {
+        this.uow = uow;
         this._IrrigationLogRepository = _IrrigationLogRepository;
         this.getIrrigationLogAsync = async (req, res) => {
             try {
@@ -43,7 +44,7 @@ class IrrigationLogController {
         this.createIrrigationLogAsync = async (req, res) => {
             try {
                 const irrigationLogData = req.body;
-                const command = new createIrrigationLogCommand_1.CreateIrrigationLogCommand(this._IrrigationLogRepository);
+                const command = new createIrrigationLogCommand_1.CreateIrrigationLogCommand(this.uow, this._IrrigationLogRepository);
                 command.irrigationLogData = irrigationLogData;
                 const createdIrrigationLog = await command.executeAsync();
                 res.status(201).json(createdIrrigationLog);

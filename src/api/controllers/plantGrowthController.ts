@@ -7,9 +7,10 @@ import { DeletePlantGrowthCommand } from '../../core/application/commands/plantG
 import { IPlantGrowthRepository } from '../../core/application/interface/repositories/iPlantGrowthRepository';
 import { List } from '../../share/utilities/list';
 import { PlantGrowthDTO } from '../../core/application/dTOs/plantGrowthDTO';
+import { UnitOfWork } from '../../infrastructure/data/unitofWork';
 
 export class PlantGrowthController {
-  constructor(private readonly _PlantGrowthRepository: IPlantGrowthRepository) {}
+  constructor(private readonly uow:UnitOfWork,private readonly _plantGrowthRepository: IPlantGrowthRepository) {}
 
   public getPlantGrowthAsync = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -19,7 +20,7 @@ export class PlantGrowthController {
         return;
       }
 
-      const command = new GetPlantGrowthCommand(this._PlantGrowthRepository);
+      const command = new GetPlantGrowthCommand(this._plantGrowthRepository);
       command.id = id;
       const result: PlantGrowthDTO = await command.executeAsync();
 
@@ -38,7 +39,7 @@ export class PlantGrowthController {
   public getPlantGrowthsListAsync = async (req: Request, res: Response): Promise<void> => {
     try {
       const fieldId:number = parseInt(req.params.id, 10);
-      const command = new GetPlantGrowthListCommand(this._PlantGrowthRepository,fieldId);
+      const command = new GetPlantGrowthListCommand(this._plantGrowthRepository,fieldId);
       const result: List<PlantGrowthDTO> = await command.executeAsync();
       res.status(200).json(result);
     } catch (error) {
@@ -50,7 +51,7 @@ export class PlantGrowthController {
   public createPlantGrowthAsync = async (req: Request, res: Response): Promise<void> => {
     try {
       const PlantGrowthData: PlantGrowthDTO = req.body;
-      const command = new CreatePlantGrowthCommand(this._PlantGrowthRepository);
+      const command = new CreatePlantGrowthCommand(this.uow,this._plantGrowthRepository);
       command.plantGrowthData = PlantGrowthData;
       const createdPlantGrowth: boolean = await command.executeAsync();
       res.status(201).json(createdPlantGrowth);
@@ -64,7 +65,7 @@ export class PlantGrowthController {
     try {
 
       const PlantGrowthData: PlantGrowthDTO = req.body;     
-      const command = new UpdatePlantGrowthCommand(this._PlantGrowthRepository);
+      const command = new UpdatePlantGrowthCommand(this.uow, this._plantGrowthRepository);
       command.plantGrowthData = PlantGrowthData;
       const updatedPlantGrowth: boolean = await command.executeAsync();
       res.status(200).json(updatedPlantGrowth);
@@ -81,7 +82,7 @@ export class PlantGrowthController {
         res.status(400).json({ message: 'Invalid PlantGrowth ID' });
         return;
       }
-      const command = new DeletePlantGrowthCommand(this._PlantGrowthRepository);
+      const command = new DeletePlantGrowthCommand(this.uow,this._plantGrowthRepository);
       command.plantGrowthId = PlantGrowthId;
       const deleted:boolean = await command.executeAsync();
       res.status(204).json(deleted);

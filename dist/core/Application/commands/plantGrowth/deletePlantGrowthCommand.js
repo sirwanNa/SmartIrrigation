@@ -2,13 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DeletePlantGrowthCommand = void 0;
 class DeletePlantGrowthCommand {
-    constructor(PlantGrowthRepository) {
-        this._plantGrowthRepository = PlantGrowthRepository;
+    constructor(uow, plantGrowthRepository) {
+        this.uow = uow;
+        this.plantGrowthRepository = plantGrowthRepository;
     }
-    executeAsync() {
+    async executeAsync() {
         if (this.plantGrowthId === undefined)
             throw new Error('Id is undefined');
-        return this._plantGrowthRepository.removeAsync(this.plantGrowthId);
+        this.uow.start();
+        let result = await this.plantGrowthRepository.removeAsync(this.plantGrowthId);
+        this.uow.complete();
+        return result;
     }
 }
 exports.DeletePlantGrowthCommand = DeletePlantGrowthCommand;

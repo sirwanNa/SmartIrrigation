@@ -5,9 +5,10 @@ import { CreateIrrigationLogCommand } from '../../core/application/commands/irri
 import { IIrrigationLogRepository } from '../../core/application/interface/repositories/iIrrigationLogRepository';
 import { List } from '../../share/utilities/list';
 import { IrrigationLogDTO } from '../../core/application/dTOs/irrigationLogDTO';
+import { UnitOfWork } from '../../infrastructure/data/unitofWork';
 
 export class IrrigationLogController {
-  constructor(private readonly _IrrigationLogRepository: IIrrigationLogRepository) {}
+  constructor(private readonly uow:UnitOfWork,private readonly _IrrigationLogRepository: IIrrigationLogRepository) {}
 
   public getIrrigationLogAsync = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -48,7 +49,7 @@ export class IrrigationLogController {
   public createIrrigationLogAsync = async (req: Request, res: Response): Promise<void> => {
     try {
       const irrigationLogData: IrrigationLogDTO = req.body;
-      const command = new CreateIrrigationLogCommand(this._IrrigationLogRepository);
+      const command = new CreateIrrigationLogCommand(this.uow, this._IrrigationLogRepository);
       command.irrigationLogData = irrigationLogData;
       const createdIrrigationLog: boolean = await command.executeAsync();
       res.status(201).json(createdIrrigationLog);

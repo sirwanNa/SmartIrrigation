@@ -2,14 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateIrrigationLogCommand = void 0;
 class CreateIrrigationLogCommand {
-    constructor(irrigationLogRepository) {
-        this._irrigationLogRepository = irrigationLogRepository;
+    constructor(uow, irrigationLogRepository) {
+        this.uow = uow;
+        this.irrigationLogRepository = irrigationLogRepository;
     }
     async executeAsync() {
         if (!this.irrigationLogData) {
             throw new Error('IrrigationLog data is undefined');
         }
-        return await this._irrigationLogRepository.createAsync(this.irrigationLogData);
+        this.uow.start();
+        let result = await this.irrigationLogRepository.createAsync(this.irrigationLogData);
+        this.uow.complete();
+        return result;
     }
 }
 exports.CreateIrrigationLogCommand = CreateIrrigationLogCommand;

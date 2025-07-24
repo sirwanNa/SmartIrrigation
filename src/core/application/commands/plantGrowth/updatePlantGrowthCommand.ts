@@ -1,19 +1,22 @@
 import { ICommand } from '../iCommand';
 import { IPlantGrowthRepository } from '../../interface/repositories/iPlantGrowthRepository';
 import { PlantGrowthDTO } from '../../dTOs/plantGrowthDTO';
+import { IUnitOfWork } from '../../../../infrastructure/data/iunitofWork';
 
-export class UpdatePlantGrowthCommand implements ICommand {
-  private _plantGrowthRepository: IPlantGrowthRepository;
+export class UpdatePlantGrowthCommand implements ICommand { 
   public plantGrowthData?: PlantGrowthDTO;
 
-  constructor(PlantGrowthRepository: IPlantGrowthRepository) {
-    this._plantGrowthRepository = PlantGrowthRepository;
+  constructor(private readonly uow:IUnitOfWork,private readonly plantGrowthRepository: IPlantGrowthRepository) {
+   
   }
 
   public async executeAsync(): Promise<boolean> {
     if (!this.plantGrowthData) {
       throw new Error('PlantGrowth data is undefined');
     }
-    return await this._plantGrowthRepository.updateAsync(this.plantGrowthData);
+    this.uow.start();
+     let result:boolean = await this.plantGrowthRepository.updateAsync(this.plantGrowthData);
+     this.uow.complete();   
+     return result;  
   }
 }
