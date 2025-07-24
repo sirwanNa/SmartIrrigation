@@ -2,14 +2,14 @@ import { DataSetDTO } from "../../core/application/dTOs/dataSetDTO";
 import { IDataSetRepository } from "../../core/application/interface/repositories/iDataSetRepository";
 import { DataSet } from "../../core/domain/entities/dataset";
 import { List } from "../../share/utilities/list";
-import { UnitOfWork } from "../data/unitofWork";
 import { BaseRepository } from "./baseRepository";
 import { Mapper } from '../../share/utilities/mapper';
+import { MongoContext } from '../data/mongoContext';
 
 
 export class DataSetRepository extends BaseRepository<DataSet> implements IDataSetRepository {
-    constructor(uow: UnitOfWork) {
-    super(uow, 'dataSet');
+    constructor(context: MongoContext) {
+    super(context, 'dataSet');
     }
 
      public async getDataSetAsync():Promise<List<DataSetDTO>> {

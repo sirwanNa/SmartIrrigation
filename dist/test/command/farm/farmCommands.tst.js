@@ -13,7 +13,7 @@ const deleteFarmCommand_1 = require("../../../core/application/commands/farm/del
 async function testFarmCommands() {
     const mongoContext = new mongoContext_1.MongoContext();
     const uow = new unitofWork_1.UnitOfWork(mongoContext);
-    const farmRepository = new farmRepository_1.FarmRepository(uow);
+    const farmRepository = new farmRepository_1.FarmRepository(mongoContext);
     const farmId = 1026; // Ensure unique for testing
     // 1. Create a Farm
     const createFarmCommand = new createFarmCommand_1.CreateFarmCommand(farmRepository);

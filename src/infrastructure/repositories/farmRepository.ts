@@ -3,12 +3,12 @@ import { FarmDTO } from '../../core/application/dTOs/farmDTO';
 import { List } from '../../share/utilities/list';
 import { BaseRepository } from './baseRepository';
 import { Farm } from '../../core/domain/entities/farm';
-import { UnitOfWork } from '../data/unitofWork';
 import { Mapper } from '../../share/utilities/mapper';
+import { MongoContext } from '../data/mongoContext';
 
 export class FarmRepository extends BaseRepository<Farm> implements IFarmRepository {
-  constructor(uow: UnitOfWork) {
-    super(uow, 'farms');
+  constructor(context: MongoContext) {
+    super(context, 'farms');
   }
 
   public async getFarmAsync(id: number): Promise<FarmDTO> {

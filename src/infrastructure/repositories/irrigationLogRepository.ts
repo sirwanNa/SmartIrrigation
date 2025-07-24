@@ -2,14 +2,14 @@ import { IIrrigationLogRepository } from '../../core/application/interface/repos
 import { IrrigationLogDTO } from '../../core/application/dTOs/irrigationLogDTO';
 import { List } from '../../share/utilities/list';
 import { BaseRepository } from './baseRepository';
-import { UnitOfWork } from '../data/unitofWork';
 import { IrrigationLog } from '../../core/domain/entities/irrigationLog';
 import { Filter } from 'mongodb';
 import { Mapper } from '../../share/utilities/mapper';
+import { MongoContext } from "../data/mongoContext";
 
 export class IrrigationLogRepository extends BaseRepository<IrrigationLog> implements IIrrigationLogRepository {
-    constructor(uow: UnitOfWork) {
-      super(uow, 'irrigationLogs');
+    constructor(context: MongoContext) {
+      super(context, 'irrigationLogs');
     }
 
   public async getIrrigationLogAsync(id: number): Promise<IrrigationLogDTO> {

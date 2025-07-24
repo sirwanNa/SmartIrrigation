@@ -31,7 +31,7 @@ class RouteHandlers {
             return this.router;
         };
         this.farmAPIs = () => {
-            const farmRepository = new farmRepository_1.FarmRepository(this.uow);
+            const farmRepository = new farmRepository_1.FarmRepository(this.mongoContext);
             const controller = new farmController_1.FarmController(farmRepository);
             this.router.get('/farm/getfarm/:id', controller.getFarmAsync);
             this.router.get('/farm/getfarmsList/', controller.getFarmsListAsync);
@@ -40,7 +40,7 @@ class RouteHandlers {
             this.router.delete('/farm/delete/:id', controller.deleteFarmAsync);
         };
         this.fieldAPIs = () => {
-            const fieldRepository = new fieldRepository_1.FieldRepository(this.uow);
+            const fieldRepository = new fieldRepository_1.FieldRepository(this.mongoContext);
             const controller = new fieldController_1.FieldController(fieldRepository);
             this.router.get('/field/:id', controller.getFieldAsync);
             this.router.get('/field/getFieldsList/', controller.getFieldsListAsync);
@@ -49,14 +49,14 @@ class RouteHandlers {
             this.router.delete('/field/delete/:id', controller.deleteFieldAsync);
         };
         this.irrigationLogAPIs = () => {
-            const irrigationLogRepository = new irrigationLogRepository_1.IrrigationLogRepository(this.uow);
+            const irrigationLogRepository = new irrigationLogRepository_1.IrrigationLogRepository(this.mongoContext);
             const controller = new irrigationLogController_1.IrrigationLogController(irrigationLogRepository);
             this.router.get('/irrigationlog/:id', controller.getIrrigationLogAsync);
             this.router.get('/irrigationlog/getirrigationlogslist/', controller.getIrrigationLogsListAsync);
             this.router.post('/irrigationlog/create/', controller.createIrrigationLogAsync);
         };
         this.plantGrowthAPIs = () => {
-            const plantGrowthRepository = new plantGrowthRepository_1.PlantGrowthRepository(this.uow);
+            const plantGrowthRepository = new plantGrowthRepository_1.PlantGrowthRepository(this.mongoContext);
             const controller = new plantGrowthController_1.PlantGrowthController(plantGrowthRepository);
             this.router.get('/plantgrowth/:id', controller.getPlantGrowthAsync);
             this.router.get('/plantgrowth/getplantgrowthslist/', controller.getPlantGrowthsListAsync);
@@ -65,14 +65,18 @@ class RouteHandlers {
             this.router.delete('/plantgrowth/delete/:id', controller.deletePlantGrowthAsync);
         };
         this.sensorLogAPIs = () => {
-            const sensorLogRepository = new sensorLogRepository_1.SensorLogRepository(this.uow);
-            const controller = new sensorLogController_1.SensorLogController(sensorLogRepository);
+            const sensorLogRepository = new sensorLogRepository_1.SensorLogRepository(this.mongoContext);
+            const sensorRepository = new sensorRepository_1.SensorRepository(this.mongoContext);
+            const irrigationLogRepository = new irrigationLogRepository_1.IrrigationLogRepository(this.mongoContext);
+            const fieldRepository = new fieldRepository_1.FieldRepository(this.mongoContext);
+            const dataSetRepository = new dataSetRepository_1.DataSetRepository(this.mongoContext);
+            const controller = new sensorLogController_1.SensorLogController(this.uow, sensorLogRepository, sensorRepository, irrigationLogRepository, fieldRepository, dataSetRepository);
             this.router.get('/sensorlog/:id', controller.getSensorLogAsync);
             this.router.get('/sensorlog/getsensorlogslist/:fieldId', controller.getSensorLogsListAsync);
             this.router.post('/sensorlog/create/', controller.createSensorLogAsync);
         };
         this.sensorAPIs = () => {
-            const sensorRepository = new sensorRepository_1.SensorRepository(this.uow);
+            const sensorRepository = new sensorRepository_1.SensorRepository(this.mongoContext);
             const controller = new sensorController_1.SensorController(sensorRepository);
             this.router.get('/sensor/:id', controller.getSensorAsync);
             this.router.get('/sensor/getsensorslist/', controller.getSensorsListAsync);
@@ -81,7 +85,7 @@ class RouteHandlers {
             this.router.delete('/sensor/delete/:id', controller.deleteSensorAsync);
         };
         this.dataSetAPIs = () => {
-            const dataSetRepository = new dataSetRepository_1.DataSetRepository(this.uow);
+            const dataSetRepository = new dataSetRepository_1.DataSetRepository(this.mongoContext);
             const controller = new dataSetController_1.DataSetController(dataSetRepository);
             this.router.get('/dataSet/getdataset', controller.getDataSetAsync);
         };

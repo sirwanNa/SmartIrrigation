@@ -2,14 +2,14 @@ import { IPlantGrowthRepository } from '../../core/application/interface/reposit
 import { PlantGrowthDTO } from '../../core/application/dTOs/plantGrowthDTO';
 import { List } from '../../share/utilities/list';
 import { BaseRepository } from './baseRepository';
-import { UnitOfWork } from '../data/unitofWork';
 import { Filter } from 'mongodb';
 import {PlantGrowth} from '../../core/domain/entities/plantGrowth'
 import { Mapper } from '../../share/utilities/mapper';
+import { MongoContext } from "../data/mongoContext";
 
 export class PlantGrowthRepository extends BaseRepository<PlantGrowth> implements IPlantGrowthRepository {
-  constructor(uow: UnitOfWork) {
-    super(uow, 'plantGrowth');
+  constructor(context: MongoContext) {
+    super(context, 'plantGrowth');
   }
 
   public async getPlantGrowthAsync(id: number): Promise<PlantGrowthDTO> {

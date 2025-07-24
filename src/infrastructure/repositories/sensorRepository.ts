@@ -2,15 +2,15 @@ import { ISensorRepository } from '../../core/application/interface/repositories
 import { SensorDTO } from '../../core/application/dTOs/sensorDTO';
 import { List } from '../../share/utilities/list';
 import { BaseRepository } from './baseRepository';
-import { UnitOfWork } from '../data/unitofWork';
 import { Sensor } from '../../core/domain/entities/sensor';
 import { Mapper } from '../../share/utilities/mapper';
 import { Filter } from 'mongodb';
+import { MongoContext } from "../data/mongoContext";
 
 export class SensorRepository extends BaseRepository<Sensor> implements ISensorRepository {
 
-  constructor(uow: UnitOfWork) {
-    super(uow, 'sensors');
+  constructor(context: MongoContext) {
+    super(context, 'sensors');
   }  
 
 

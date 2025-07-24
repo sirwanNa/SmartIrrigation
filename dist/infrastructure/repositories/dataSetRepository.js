@@ -5,8 +5,8 @@ const list_1 = require("../../share/utilities/list");
 const baseRepository_1 = require("./baseRepository");
 const mapper_1 = require("../../share/utilities/mapper");
 class DataSetRepository extends baseRepository_1.BaseRepository {
-    constructor(uow) {
-        super(uow, 'dataSet');
+    constructor(context) {
+        super(context, 'dataSet');
     }
     async getDataSetAsync() {
         const entities = await this.getAll();

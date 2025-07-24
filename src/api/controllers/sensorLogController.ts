@@ -5,9 +5,19 @@ import { CreateSensorLogCommand } from '../../core/application/commands/sensorLo
 import { ISensorLogRepository } from '../../core/application/interface/repositories/iSensorLogRepository';
 import { List } from '../../share/utilities/list';
 import { SensorLogDTO } from '../../core/application/dTOs/sensorLogDTO';
+import { ISensorRepository } from '../../core/application/interface/repositories/iSensorRepository';
+import { IIrrigationLogRepository } from '../../core/application/interface/repositories/iIrrigationLogRepository';
+import { IFieldRepository } from '../../core/application/interface/repositories/iFieldRepository';
+import { IDataSetRepository } from '../../core/application/interface/repositories/iDataSetRepository';
+import { IUnitOfWork } from '../../infrastructure/data/iunitofWork';
 
 export class SensorLogController {
-  constructor(private readonly _SensorLogRepository: ISensorLogRepository) {}
+  constructor(private readonly uow:IUnitOfWork, private readonly _sensorLogRepository: ISensorLogRepository,
+    private readonly _sensorRepository:ISensorRepository,
+    private readonly _irrigationLogRepository:IIrrigationLogRepository,
+    private readonly fieldRepository:IFieldRepository,
+    private readonly dataSetRepository:IDataSetRepository
+  ) {}
 
   public getSensorLogAsync = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -17,7 +27,7 @@ export class SensorLogController {
         return;
       }
 
-      const command = new GetSensorLogCommand(this._SensorLogRepository);
+      const command = new GetSensorLogCommand(this._sensorLogRepository);
       command.sensorLogId = sensorLogId;
       const result: SensorLogDTO = await command.executeAsync();
 
@@ -36,7 +46,7 @@ export class SensorLogController {
   public getSensorLogsListAsync = async (req: Request, res: Response): Promise<void> => {
     try {
       const sensorId:number = parseInt(req.params.id, 10);
-      const command = new GetSensorLogsListCommand(this._SensorLogRepository,sensorId);
+      const command = new GetSensorLogsListCommand(this._sensorLogRepository,sensorId);
       const result: List<SensorLogDTO> = await command.executeAsync();
       res.status(200).json(result);
     } catch (error) {
@@ -48,8 +58,9 @@ export class SensorLogController {
   public createSensorLogAsync = async (req: Request, res: Response): Promise<void> => {
     try {
       const SensorLogData: SensorLogDTO = req.body;
-      const command = new CreateSensorLogCommand(this._SensorLogRepository);
-      command.SensorLogData = SensorLogData;
+      const command = new CreateSensorLogCommand(this.uow,this._sensorLogRepository,this._sensorRepository,
+        this._irrigationLogRepository,this.fieldRepository,this.dataSetRepository);
+      command.sensorLogData = SensorLogData;
       const createdSensorLog: boolean = await command.executeAsync();
       res.status(201).json(createdSensorLog);
     } catch (error) {

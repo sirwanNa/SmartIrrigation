@@ -5,8 +5,8 @@ const list_1 = require("../../share/utilities/list");
 const baseRepository_1 = require("./baseRepository");
 const mapper_1 = require("../../share/utilities/mapper");
 class IrrigationLogRepository extends baseRepository_1.BaseRepository {
-    constructor(uow) {
-        super(uow, 'irrigationLogs');
+    constructor(context) {
+        super(context, 'irrigationLogs');
     }
     async getIrrigationLogAsync(id) {
         const entity = await this.getById(id);

@@ -2,15 +2,16 @@
 import { BaseEntity } from '../../core/domain/entities/baseEntity';
 import { UnitOfWork } from '../data/unitofWork';
 import { Filter, OptionalUnlessRequiredId, WithId } from 'mongodb';
+import { MongoContext } from "../data/mongoContext";
 
 export abstract class BaseRepository<T extends BaseEntity> {
   constructor(
-    protected readonly uow: UnitOfWork,
+    protected readonly context: MongoContext,
     protected readonly collectionName: string
   ) {}
 
   protected get collection() {
-    return this.uow.context.db.collection<T>(this.collectionName);
+    return this.context.db.collection<T>(this.collectionName);
   }
 
   protected stripMongoId(document: WithId<T>): T {
@@ -21,7 +22,7 @@ export abstract class BaseRepository<T extends BaseEntity> {
   public async getById(id: number): Promise<T | null> {
     const result = await this.collection.findOne(
       { id } as Filter<T>,
-      { session: this.uow.getSession() }
+      { session: this.context.getSession() }
     );
 
     return result ? this.stripMongoId(result as WithId<T>) : null;
@@ -30,7 +31,7 @@ export abstract class BaseRepository<T extends BaseEntity> {
   public async getAll(filter?:Filter<T>): Promise<T[]> {
     const results = await this.collection.find(
       filter !== undefined? filter:{},
-      { session: this.uow.getSession() }
+      { session: this.context.getSession() }
     ).toArray();
 
     return results.map(doc => this.stripMongoId(doc as WithId<T>));
@@ -39,7 +40,7 @@ export abstract class BaseRepository<T extends BaseEntity> {
   public async create(entity: T): Promise<boolean> {
     const result = await this.collection.insertOne(
        entity as unknown as OptionalUnlessRequiredId<T>,
-      { session: this.uow.getSession() }
+      { session: this.context.getSession() }
     );
     return result.acknowledged;
   }
@@ -48,7 +49,7 @@ export abstract class BaseRepository<T extends BaseEntity> {
     const result = await this.collection.updateOne(
       { id: entity.id } as Filter<T>,
       { $set: entity },
-      { session: this.uow.getSession() }
+      { session: this.context.getSession() }
     );
     return result.modifiedCount > 0;
   }
@@ -56,7 +57,7 @@ export abstract class BaseRepository<T extends BaseEntity> {
   public async delete(id: number): Promise<boolean> {
     const result = await this.collection.deleteOne(
       { id } as Filter<T>,
-      { session: this.uow.getSession() }
+      { session: this.context.getSession() }
     );
     return result.deletedCount > 0;
   }

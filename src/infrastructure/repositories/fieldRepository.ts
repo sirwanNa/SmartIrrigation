@@ -2,14 +2,14 @@ import { IFieldRepository } from '../../core/application/interface/repositories/
 import { FieldDTO } from '../../core/application/dTOs/fieldDTO';
 import { List } from '../../share/utilities/list';
 import { BaseRepository } from './baseRepository';
-import { UnitOfWork } from '../data/unitofWork';
 import { Field } from '../../core/domain/entities/field';
 import { Filter } from 'mongodb';
 import { Mapper } from '../../share/utilities/mapper';
+import { MongoContext } from '../data/mongoContext';
 
 export class FieldRepository extends BaseRepository<Field> implements IFieldRepository {
-    constructor(uow: UnitOfWork) {
-    super(uow, 'fields');
+    constructor(context: MongoContext) {
+    super(context, 'fields');
   }
 
   public async getFieldAsync(id: number): Promise<FieldDTO> {

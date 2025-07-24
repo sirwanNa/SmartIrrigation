@@ -5,8 +5,13 @@ const getSensorLogCommand_1 = require("../../core/application/commands/sensorLog
 const getSensorLogsListCommand_1 = require("../../core/application/commands/sensorLog/getSensorLogsListCommand");
 const createSensorLogCommand_1 = require("../../core/application/commands/sensorLog/createSensorLogCommand");
 class SensorLogController {
-    constructor(_SensorLogRepository) {
-        this._SensorLogRepository = _SensorLogRepository;
+    constructor(uow, _sensorLogRepository, _sensorRepository, _irrigationLogRepository, fieldRepository, dataSetRepository) {
+        this.uow = uow;
+        this._sensorLogRepository = _sensorLogRepository;
+        this._sensorRepository = _sensorRepository;
+        this._irrigationLogRepository = _irrigationLogRepository;
+        this.fieldRepository = fieldRepository;
+        this.dataSetRepository = dataSetRepository;
         this.getSensorLogAsync = async (req, res) => {
             try {
                 const sensorLogId = parseInt(req.params.id, 10);
@@ -14,7 +19,7 @@ class SensorLogController {
                     res.status(400).json({ message: 'Invalid SensorLog ID' });
                     return;
                 }
-                const command = new getSensorLogCommand_1.GetSensorLogCommand(this._SensorLogRepository);
+                const command = new getSensorLogCommand_1.GetSensorLogCommand(this._sensorLogRepository);
                 command.sensorLogId = sensorLogId;
                 const result = await command.executeAsync();
                 if (!result) {
@@ -31,7 +36,7 @@ class SensorLogController {
         this.getSensorLogsListAsync = async (req, res) => {
             try {
                 const sensorId = parseInt(req.params.id, 10);
-                const command = new getSensorLogsListCommand_1.GetSensorLogsListCommand(this._SensorLogRepository, sensorId);
+                const command = new getSensorLogsListCommand_1.GetSensorLogsListCommand(this._sensorLogRepository, sensorId);
                 const result = await command.executeAsync();
                 res.status(200).json(result);
             }
@@ -43,8 +48,8 @@ class SensorLogController {
         this.createSensorLogAsync = async (req, res) => {
             try {
                 const SensorLogData = req.body;
-                const command = new createSensorLogCommand_1.CreateSensorLogCommand(this._SensorLogRepository);
-                command.SensorLogData = SensorLogData;
+                const command = new createSensorLogCommand_1.CreateSensorLogCommand(this.uow, this._sensorLogRepository, this._sensorRepository, this._irrigationLogRepository, this.fieldRepository, this.dataSetRepository);
+                command.sensorLogData = SensorLogData;
                 const createdSensorLog = await command.executeAsync();
                 res.status(201).json(createdSensorLog);
             }

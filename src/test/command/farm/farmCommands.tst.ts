@@ -16,7 +16,7 @@ async function testFarmCommands() {
 
   const mongoContext = new MongoContext();
   const uow = new UnitOfWork(mongoContext);
-  const farmRepository: IFarmRepository = new FarmRepository(uow);
+  const farmRepository: IFarmRepository = new FarmRepository(mongoContext);
 
   const farmId = 1026; // Ensure unique for testing
 

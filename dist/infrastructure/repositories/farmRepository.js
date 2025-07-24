@@ -5,8 +5,8 @@ const list_1 = require("../../share/utilities/list");
 const baseRepository_1 = require("./baseRepository");
 const mapper_1 = require("../../share/utilities/mapper");
 class FarmRepository extends baseRepository_1.BaseRepository {
-    constructor(uow) {
-        super(uow, 'farms');
+    constructor(context) {
+        super(context, 'farms');
     }
     async getFarmAsync(id) {
         const entity = await this.getById(id);

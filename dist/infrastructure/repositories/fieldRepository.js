@@ -5,8 +5,8 @@ const list_1 = require("../../share/utilities/list");
 const baseRepository_1 = require("./baseRepository");
 const mapper_1 = require("../../share/utilities/mapper");
 class FieldRepository extends baseRepository_1.BaseRepository {
-    constructor(uow) {
-        super(uow, 'fields');
+    constructor(context) {
+        super(context, 'fields');
     }
     async getFieldAsync(id) {
         const entity = await this.getById(id);

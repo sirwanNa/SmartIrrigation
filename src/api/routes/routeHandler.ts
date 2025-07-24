@@ -41,7 +41,7 @@ export class RouteHandlers{
         return this.router;
     }
     farmAPIs=()=>{
-        const farmRepository: IFarmRepository = new FarmRepository(this.uow);
+        const farmRepository: IFarmRepository = new FarmRepository(this.mongoContext);
         const controller = new FarmController(farmRepository);
 
         this.router.get('/farm/getfarm/:id', controller.getFarmAsync);
@@ -51,7 +51,7 @@ export class RouteHandlers{
         this.router.delete('/farm/delete/:id',controller.deleteFarmAsync);       
     }
     fieldAPIs =()=>{
-        const fieldRepository: IFieldRepository = new FieldRepository(this.uow);
+        const fieldRepository: IFieldRepository = new FieldRepository(this.mongoContext);
         const controller = new FieldController(fieldRepository);
         
         this.router.get('/field/:id', controller.getFieldAsync);
@@ -61,7 +61,7 @@ export class RouteHandlers{
         this.router.delete('/field/delete/:id',controller.deleteFieldAsync);
     }
     irrigationLogAPIs = ()=>{
-        const irrigationLogRepository: IIrrigationLogRepository = new IrrigationLogRepository(this.uow);
+        const irrigationLogRepository: IIrrigationLogRepository = new IrrigationLogRepository(this.mongoContext);
         const controller = new IrrigationLogController(irrigationLogRepository);
         
         this.router.get('/irrigationlog/:id', controller.getIrrigationLogAsync);
@@ -69,7 +69,7 @@ export class RouteHandlers{
         this.router.post('/irrigationlog/create/',controller.createIrrigationLogAsync);
     }
     plantGrowthAPIs =()=>{
-        const plantGrowthRepository: IPlantGrowthRepository = new PlantGrowthRepository(this.uow);
+        const plantGrowthRepository: IPlantGrowthRepository = new PlantGrowthRepository(this.mongoContext);
         const controller = new PlantGrowthController(plantGrowthRepository);
         this.router.get('/plantgrowth/:id', controller.getPlantGrowthAsync);
         this.router.get('/plantgrowth/getplantgrowthslist/',controller.getPlantGrowthsListAsync);
@@ -78,15 +78,20 @@ export class RouteHandlers{
         this.router.delete('/plantgrowth/delete/:id',controller.deletePlantGrowthAsync);
     }
     sensorLogAPIs = ()=>{
-        const sensorLogRepository: ISensorLogRepository = new SensorLogRepository(this.uow);
-        const controller = new SensorLogController(sensorLogRepository);
+        const sensorLogRepository: ISensorLogRepository = new SensorLogRepository(this.mongoContext);
+        const sensorRepository: ISensorRepository = new SensorRepository(this.mongoContext);
+        const irrigationLogRepository: IIrrigationLogRepository = new IrrigationLogRepository(this.mongoContext);
+        const fieldRepository: IFieldRepository = new FieldRepository(this.mongoContext);
+        const dataSetRepository: IDataSetRepository = new DataSetRepository(this.mongoContext);
+        const controller = new SensorLogController(this.uow,sensorLogRepository,sensorRepository,irrigationLogRepository,
+                            fieldRepository,dataSetRepository);
         
         this.router.get('/sensorlog/:id', controller.getSensorLogAsync);
         this.router.get('/sensorlog/getsensorlogslist/:fieldId',controller.getSensorLogsListAsync);
         this.router.post('/sensorlog/create/',controller.createSensorLogAsync);
     }
     sensorAPIs =()=>{
-       const sensorRepository: ISensorRepository = new SensorRepository(this.uow);
+       const sensorRepository: ISensorRepository = new SensorRepository(this.mongoContext);
        const controller = new SensorController(sensorRepository);
        
        this.router.get('/sensor/:id', controller.getSensorAsync);
@@ -97,7 +102,7 @@ export class RouteHandlers{
 
     }
     dataSetAPIs=()=>{
-        const dataSetRepository: IDataSetRepository = new DataSetRepository(this.uow);
+        const dataSetRepository: IDataSetRepository = new DataSetRepository(this.mongoContext);
         const controller = new DataSetController(dataSetRepository);
 
          this.router.get('/dataSet/getdataset', controller.getDataSetAsync);
