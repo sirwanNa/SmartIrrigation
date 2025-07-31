@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.IrrigationType = void 0;
 var IrrigationType;
 (function (IrrigationType) {
-    IrrigationType["Drip"] = "Drip";
-    IrrigationType["Sprinkler"] = "Sprinkler";
-    IrrigationType["Fogger"] = "Fogger ";
+    IrrigationType[IrrigationType["Start"] = 0] = "Start";
+    IrrigationType[IrrigationType["End"] = 1] = "End";
 })(IrrigationType || (exports.IrrigationType = IrrigationType = {}));

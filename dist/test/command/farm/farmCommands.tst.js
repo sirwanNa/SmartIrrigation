@@ -4,7 +4,6 @@ const createFarmCommand_1 = require("../../../core/application/commands/farm/cre
 const getFarmsListCommand_1 = require("../../../core/application/commands/farm/getFarmsListCommand");
 const farmRepository_1 = require("../../../infrastructure/repositories/farmRepository");
 const farmType_1 = require("../../../core/domain/enums/farmType");
-const irrigationType_1 = require("../../../core/domain/enums/irrigationType");
 const unitofWork_1 = require("../../../infrastructure/data/unitofWork");
 const mongoContext_1 = require("../../../infrastructure/data/mongoContext");
 const getFarmCommand_1 = require("../../../core/application/commands/farm/getFarmCommand");
@@ -21,7 +20,7 @@ async function testFarmCommands() {
         id: farmId,
         name: 'Test Farm 18',
         farmType: farmType_1.FarmType.Greenhouse,
-        irrigationType: irrigationType_1.IrrigationType.Drip,
+        // irrigationMethod: IrrigationMethod.Drip,
         createdDate: new Date(),
     };
     const created = await createFarmCommand.executeAsync();

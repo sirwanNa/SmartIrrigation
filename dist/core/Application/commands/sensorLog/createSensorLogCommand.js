@@ -17,7 +17,8 @@ class CreateSensorLogCommand {
         }
         let field = await this.getField(this.sensorLogData.sensorId);
         let weatherLog = await this.getWeather(field.id);
-        let lastIrrigationLog = (await this.irrigationLogRepository.getIrrigationLogsListAsync(field.id)).orderByDesc(p => p.createdDate).firstItem();
+        let lastIrrigationLog = (await this.irrigationLogRepository.getIrrigationLogsListAsync(field.id))
+            .orderByDesc(p => p.createdDate).firstItem();
         if (lastIrrigationLog === undefined)
             throw new Error("IrrigationLog Not Found");
         await this.uow.start();

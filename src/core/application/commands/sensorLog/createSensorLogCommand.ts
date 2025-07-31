@@ -11,6 +11,7 @@ import { SensorType } from '../../../domain/enums/sensorType';
 import { IrrigationLog } from '../../../domain/entities/irrigationLog';
 import { DataSetDTO } from '../../dTOs/dataSetDTO';
 import { IDataSetRepository } from '../../interface/repositories/iDataSetRepository';
+import { IrrigationLogDTO } from '../../dTOs/irrigationLogDTO';
 
 export class CreateSensorLogCommand implements ICommand {
  
@@ -31,7 +32,8 @@ export class CreateSensorLogCommand implements ICommand {
     }
     let field:FieldDTO = await this.getField(this.sensorLogData.sensorId);
     let weatherLog:SensorLogDTO = await this.getWeather(field.id);  
-    let lastIrrigationLog:IrrigationLog | undefined = (await this.irrigationLogRepository.getIrrigationLogsListAsync(field.id)).orderByDesc(p=>p.createdDate).firstItem(); 
+    let lastIrrigationLog:IrrigationLogDTO | undefined = (await this.irrigationLogRepository.getIrrigationLogsListAsync(field.id))
+                              .orderByDesc(p=>p.createdDate).firstItem(); 
     if(lastIrrigationLog === undefined) throw new Error("IrrigationLog Not Found");  
     await this.uow.start();
     let sensorLogCreated:boolean = await this.sensorLogRepository.createAsync(this.sensorLogData);

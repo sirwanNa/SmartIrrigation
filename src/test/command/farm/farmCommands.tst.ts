@@ -3,7 +3,7 @@ import {GetFarmsListCommand} from '../../../core/application/commands/farm/getFa
 import {IFarmRepository} from '../../../core/application/interface/repositories/iFarmRepository'
 import {FarmRepository} from '../../../infrastructure/repositories/farmRepository'
 import {FarmType} from '../../../core/domain/enums/farmType'
-import {IrrigationType} from '../../../core/domain/enums/irrigationType'
+import {IrrigationMethod} from '../../../core/domain/enums/irrigationMethod'
 import { UnitOfWork } from '../../../infrastructure/data/unitofWork'
 import { MongoContext } from '../../../infrastructure/data/mongoContext'
 import { GetFarmCommand } from '../../../core/application/commands/farm/getFarmCommand'
@@ -26,7 +26,7 @@ async function testFarmCommands() {
     id: farmId,
     name: 'Test Farm 18',
     farmType: FarmType.Greenhouse,
-    irrigationType: IrrigationType.Drip,
+    // irrigationMethod: IrrigationMethod.Drip,
     createdDate: new Date(),
   };
 

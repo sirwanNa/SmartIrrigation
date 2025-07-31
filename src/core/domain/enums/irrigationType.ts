@@ -12,7 +12,6 @@
 // }
 
 export enum IrrigationType {
-  Drip = "Drip",                     // قطره ایی
-  Sprinkler = "Sprinkler",           // بارانی
-  Fogger  = "Fogger ",               // مه پاش
+   Start,
+   End
 }
