@@ -4,7 +4,7 @@ import pandas as pd
 import math
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 
@@ -13,14 +13,14 @@ BASE_URL = "http://localhost:4000"
 DATASET_URL = f"{BASE_URL}/api/v1/dataset/getdataset"
 SAVE_METRICS_URL = f"{BASE_URL}/api/v1/machinelearning/accuracyprameters/"
 UPDATE_MODEL_URL = f"{BASE_URL}/ai/v1/dataset/updateModel"
-GET_LOCAL_MODEL_URL = f"{BASE_URL}/api/v1/machinelearning/gradientboosting/getlocalmodel"
+GET_LOCAL_MODEL_URL = f"{BASE_URL}/api/v1/machinelearning/linear/getlocalmodel"
 
 
-class GradientBoostingRegressorService:
+class LinearRegressionService:
     def __init__(self):
         self.label_encoders = {}
         self.scaler = MinMaxScaler()
-        self.model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
+        self.model = LinearRegression()
 
     def fetch_dataset(self):
         response = requests.get(DATASET_URL)
@@ -53,7 +53,7 @@ class GradientBoostingRegressorService:
         r2 = r2_score(y_test, y_pred)
 
         payload = {
-            "model": "GradientBoosting",
+            "model": "LinearRegression",
             "mae": round(mae, 4),
             "mse": round(mse, 4),
             "rmse": round(rmse, 4),
@@ -66,8 +66,8 @@ class GradientBoostingRegressorService:
             print("Error saving metrics:", response.text)
 
         model_update_payload = {
-            "modelName": "GradientBoosting",
-            "description": "Gradient Boosting model to predict estimated irrigation time.",
+            "modelName": "LinearRegression",
+            "description": "Linear regression model to predict estimated irrigation time.",
             "metrics": payload,
             "version": "1.0"
         }
@@ -93,7 +93,7 @@ class GradientBoostingRegressorService:
 
 
 if __name__ == "__main__":
-    service = GradientBoostingRegressorService()
+    service = LinearRegressionService()
     df = service.fetch_dataset()
     X, y = service.preprocess(df)
     X_test, y_test, y_pred = service.train(X, y)

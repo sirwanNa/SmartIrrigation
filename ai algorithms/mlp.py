@@ -1,81 +1,115 @@
 import requests
+import numpy as np
 import pandas as pd
-from sklearn.neural_network import MLPRegressor
+import math
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.metrics import mean_squared_error
-import pickle
-import io
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from tensorflow.keras.models import Sequential, model_from_json
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.utils import set_random_seed
 
-# Step 1: Load dataset from the API
-response = requests.get("http://localhost:4000/api/v1/dataset/getdataset")
-response.raise_for_status()
-data = response.json()
+set_random_seed(42)
 
-# Step 2: Convert to DataFrame
-df = pd.DataFrame(data)
+# Constants for API URLs
+BASE_URL = "http://localhost:4000"
+DATASET_URL = f"{BASE_URL}/api/v1/dataset/getdataset"
+SAVE_METRICS_URL = f"{BASE_URL}/api/v1/machinelearning/accuracyprameters/"
+UPDATE_MODEL_URL = f"{BASE_URL}/ai/v1/dataset/updateModel"
+GET_LOCAL_MODEL_URL = f"{BASE_URL}/api/v1/machinelearning/mlp/getlocalmodel"
 
-# Step 3: Define features and target
-feature_cols = ['crop_Type', 'Soil_Type', 'temp', 'plant_Size', 'month', 'farm_Type']
-target_col = 'estimated_time'
 
-X = df[feature_cols]
-y = df[target_col]
+class MLPRegressorService:
+    def __init__(self):
+        self.label_encoders = {}
+        self.scaler = MinMaxScaler()
+        self.model = None
+        self.input_dim = 5
 
-# Step 4: Identify column types
-categorical_features = ['crop_Type', 'Soil_Type', 'month', 'farm_Type']
-numerical_features = ['temp', 'plant_Size']
+    def fetch_dataset(self):
+        response = requests.get(DATASET_URL)
+        response.raise_for_status()
+        data = response.json()
+        df = pd.DataFrame(data)
+        return df
 
-# Step 5: Preprocessing
-preprocessor = ColumnTransformer(transformers=[
-    ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features),
-    ('num', StandardScaler(), numerical_features)
-])
+    def preprocess(self, df):
+        categorical_cols = ['soilType', 'cropType', 'month']
+        for col in categorical_cols:
+            le = LabelEncoder()
+            df[col] = le.fit_transform(df[col])
+            self.label_encoders[col] = le
+        X = df[['soilType', 'cropType', 'landSlope', 'month', 'temperature']].values
+        y = df['estimated_Time'].values
+        X_scaled = self.scaler.fit_transform(X)
+        return X_scaled, y
 
-# Step 6: Create pipeline with MLPRegressor
-pipeline = Pipeline(steps=[
-    ('preprocessor', preprocessor),
-    ('regressor', MLPRegressor(
-        hidden_layer_sizes=(100, 50),
-        activation='relu',
-        solver='adam',
-        max_iter=1000,
-        random_state=42
-    ))
-])
+    def build_model(self):
+        model = Sequential()
+        model.add(Dense(64, activation='relu', input_dim=self.input_dim))
+        model.add(Dense(32, activation='relu'))
+        model.add(Dense(1))
+        model.compile(optimizer='adam', loss='mse')
+        return model
 
-# Step 7: Train/test split
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
+    def train(self, X, y):
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        self.model = self.build_model()
+        self.model.fit(X_train, y_train, epochs=30, batch_size=16, verbose=1)
+        y_pred = self.model.predict(X_test)
+        return X_test, y_test, y_pred
 
-# Step 8: Train the model
-pipeline.fit(X_train, y_train)
+    def evaluate_and_save_metrics(self, y_test, y_pred):
+        mse = mean_squared_error(y_test, y_pred)
+        rmse = math.sqrt(mse)
+        mae = mean_absolute_error(y_test, y_pred)
+        r2 = r2_score(y_test, y_pred)
 
-# Step 9: Evaluate the model
-y_pred = pipeline.predict(X_test)
-rmse = mean_squared_error(y_test, y_pred, squared=False)
-print(f"Test RMSE: {rmse:.2f}")
+        payload = {
+            "model": "MLP",
+            "mae": round(mae, 4),
+            "mse": round(mse, 4),
+            "rmse": round(rmse, 4),
+            "r2": round(r2, 4)
+        }
+        response = requests.post(SAVE_METRICS_URL, json=payload)
+        if response.status_code in [200, 201]:
+            print("Accuracy metrics saved.")
+        else:
+            print("Error saving metrics:", response.text)
 
-# Step 10: Serialize model to binary using pickle
-model_bytes = io.BytesIO()
-pickle.dump(pipeline, model_bytes)
-model_bytes.seek(0)
+        model_update_payload = {
+            "modelName": "MLP",
+            "description": "MLP model trained to predict estimated irrigation time based on soil, crop, and weather data.",
+            "metrics": payload,
+            "version": "1.0"
+        }
+        update_response = requests.post(UPDATE_MODEL_URL, json=model_update_payload)
+        if update_response.status_code in [200, 201]:
+            print("Model info updated.")
+        else:
+            print("Error updating model:", update_response.text)
 
-# Step 11: POST the model to the API
-files = {
-    'model': ('mlp_model.pkl', model_bytes, 'application/octet-stream')
-}
-upload_response = requests.post(
-    "http://localhost:4000/ai/v1/dataset/updateModel",
-    files=files
-)
+    def predict_from_api_model(self, input_data):
+        response = requests.get(GET_LOCAL_MODEL_URL)
+        response.raise_for_status()
+        model_json = response.json().get("model_json")
+        weights = np.array(response.json().get("weights"))
 
-# Step 12: Confirm result
-if upload_response.status_code == 200:
-    print("MLP model uploaded successfully.")
-else:
-    print(f"Failed to upload model. Status code: {upload_response.status_code}")
-    print(upload_response.text)
+        model = model_from_json(model_json)
+        model.set_weights(weights)
+        model.compile(optimizer='adam', loss='mse')
+
+        scaled_input = self.scaler.transform(input_data)
+        predictions = model.predict(scaled_input)
+        return predictions
+
+
+if __name__ == "__main__":
+    service = MLPRegressorService()
+    df = service.fetch_dataset()
+    X, y = service.preprocess(df)
+    X_test, y_test, y_pred = service.train(X, y)
+    service.evaluate_and_save_metrics(y_test, y_pred)
+
+
